@@ -8,9 +8,4 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Converter\DestinationFormat\Json;
-
-interface JsonFormatInterface
-{
-    public function __invoke(object $class, array $context): string;
-}
+require __DIR__ . '/../vendor/autoload.php';

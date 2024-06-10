@@ -10,22 +10,21 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter\Converter\Throwable;
 
-use JakubLech\Converter\Builder;
-use JakubLech\Converter\Converter\ConverterClassAbstract;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use JakubLech\Converter\ConverterProviderInterface;
+use JakubLech\Converter\ConverterClassAbstract;
 use Throwable;
 
 class ThrowableConverter extends ConverterClassAbstract
 {
     protected const string BUILDER_FOR_CLASSNAME = Throwable::class;
 
-    public function __construct(private Builder $convert)
+    public function __construct(private ConverterProviderInterface $converterProvider)
     {
-        parent::__construct($this->convert);
+        parent::__construct($this->converterProvider);
 
-        $this->supportFormat('array', fn (Throwable $class, array $context = []): array => $this->toArray($class, $context));
-        $this->supportFormat('json', fn (Throwable $class, array $context = []) => json_encode($this->convertClassToFormat($class, 'array', $context)));
-        $this->supportFormat('jsonResponse', fn (Throwable $class, array $context = []) => $this->toJsonResponse($class, $context));
+        $this->registerFormatHandler('array', fn (Throwable $class, array $context = []): array => $this->toArray($class, $context));
+        $this->registerFormatHandler('json', fn (Throwable $class, array $context = []) => json_encode($this->convert($class, 'array', $context)));
+        $this->registerFormatHandler('jsonResponse', fn (Throwable $class, array $context = []) => $this->toJsonResponse($class, $context));
     }
 
     public function toArray(Throwable $exception, array $context = []): array
@@ -39,7 +38,7 @@ class ThrowableConverter extends ConverterClassAbstract
     public function toJsonResponse(Throwable $exception, array $context = []): JsonResponse
     {
         return new JsonResponse(
-            $this->convertClassToFormat($exception, 'json', $context),
+            $this->convert($exception, 'json', $context),
             $context['_status'] ?? 503,
             $context['_header'] ?? ['Content-Type' => 'application/json']
         );

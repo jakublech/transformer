@@ -1,0 +1,26 @@
+{
+  "name": "jakublech/converter",
+  "type": "library",
+  "description": "Handles converting php classes to other classes or formats",
+  "keywords": [],
+  "homepage": "https://smartbyte.pl",
+  "license": "LGPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "Jakub Lech",
+      "email": "info@smartbyte.pl"
+    }
+  ],
+  "require": {
+    "php": ">=8.3"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": { "JakubLech\\Converter\\": "/src" },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
+  },
+  "minimum-stability": "dev"
+}

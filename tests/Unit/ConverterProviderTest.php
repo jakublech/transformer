@@ -10,11 +10,15 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter\Tests\Unit;
 
-use JakubLech\Converter\ConverterClassAbstract;
+use JakubLech\Converter\ConverterAbstract;
 use JakubLech\Converter\ConverterProvider;
 use PHPUnit\Framework\TestCase;
+use Exception;
+use RuntimeException;
+use Throwable;
+use stdClass;
 
-class ConverterProviderTest extends TestCase
+final class ConverterProviderTest extends TestCase
 {
     private ConverterProvider $sut;
 
@@ -24,85 +28,53 @@ class ConverterProviderTest extends TestCase
         $this->sut = new ConverterProvider();
     }
 
-    public function testIsSupportedTrueWhenConverterExists(): void
+    public function testFindWhenConverterNotExists(): void
     {
-        $converter = $this->createMock(ConverterClassAbstract::class);
-        $converter->expects($this->any())
-            ->method('supportsClassName')
-            ->willReturn(\Exception::class);
-
-        $this->sut->register($converter);
-        $this->assertTrue($this->sut->isSupported(\Exception::class));
+        $this->assertNull($this->sut->find(Exception::class));
     }
 
-    public function testProvideWillThrowExceptionWhenClassIsNotSupported(): void
+    public function testFindWhenConverterExists(): void
     {
-        $converter = $this->createMock(ConverterClassAbstract::class);
+        $converter = $this->createMock(ConverterAbstract::class);
         $converter->expects($this->any())
-            ->method('supportsClassName')
-            ->willReturn(\Exception::class);
+            ->method('builderForClassname')
+            ->willReturn(Exception::class);
 
         $this->sut->register($converter);
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Converter not found for class stdClass');
-        $this->sut->provide(new \stdClass());
+        $this->assertInstanceOf(ConverterAbstract::class, $this->sut->find(Exception::class));
+    }
+
+    public function testFindWhenConverterSupportInterface(): void
+    {
+        $converter = $this->createMock(ConverterAbstract::class);
+        $converter->expects($this->any())
+            ->method('builderForClassname')
+            ->willReturn(\Throwable::class);
+
+        $this->sut->register($converter);
+        $this->assertInstanceOf(ConverterAbstract::class, $this->sut->find(Exception::class));
+    }
+
+    public function testBuildWillThrowExceptionWhenClassIsNotSupported(): void
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No builder found for class stdClass');
+        $this->sut->build(new stdClass(), 'format', []);
     }
 
     public function testProvideWithSupportedClass(): void
     {
-        $converter = $this->createMock(ConverterClassAbstract::class);
-        $converter->expects($this->any())
-            ->method('supportsClassName')
-            ->willReturn(\Exception::class);
+        $converter = new class() extends ConverterAbstract {
+            protected const string CONVERTER_FOR_CLASSNAME = \DateTimeInterface::class;
 
-        $converter->expects($this->once())
-            ->method('convert')
-            ->willReturn('test');
-
-        $converter->expects($this->any())
-            ->method('isClassSupported')
-            ->willReturn(true);
+        public function array(\DateTimeInterface $class, array $context = []): array
+        {
+            return ['test'];
+        }
+        };
 
         $this->sut->register($converter);
-        $this->assertEquals('test', $this->sut->provide(new \Exception())->convert(new \Exception(), 'json'));
-    }
-
-    public function testProvideWithoutFallbackForInterfaceWillThrowException(): void
-    {
-        $converter = $this->createMock(ConverterClassAbstract::class);
-        $converter->expects($this->any())
-            ->method('supportsClassName')
-            ->willReturn(\Throwable::class);
-
-        $converter->expects($this->any())
-            ->method('isClassSupported')
-            ->willReturn(true);
-
-        $this->sut->register($converter);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Converter not found for class Exception');
-        $result = $this->sut->provide(new \Exception())->convert(new \Exception(), 'json');
-    }
-
-    public function testBuildWithFallbackWillBuildCorrectly(): void
-    {
-        $converter = $this->createMock(ConverterClassAbstract::class);
-        $converter->expects($this->any())
-            ->method('supportsClassName')
-            ->willReturn(\Throwable::class);
-
-        $converter->expects($this->once())
-            ->method('convert')
-            ->willReturn('test');
-
-        $converter->expects($this->any())
-            ->method('isClassSupported')
-            ->willReturn(true);
-
-        $this->sut->register($converter);
-
-        $result = $this->sut->provide(new \Exception(), true)->convert(new \Exception(), 'json', withFallback: true);
-        $this->assertEquals('test', $result);
+        $result = $this->sut->build(new \DateTime(), 'array', []);
+        $this->assertSame(['test'], $result);
     }
 }

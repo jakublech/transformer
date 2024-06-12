@@ -10,82 +10,70 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter\Tests\Unit;
 
-use JakubLech\Converter\ConverterClassAbstract;
-use JakubLech\Converter\ConverterProviderInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use JakubLech\Converter\ConverterAbstract;
+use JakubLech\Converter\Interface\ConverterProviderInterface;
 use PHPUnit\Framework\TestCase;
+use DateTimeInterface;
+use Exception;
 
-class ConverterClassAbstractTest extends TestCase
+final class ConverterClassAbstractTest extends TestCase
 {
-    private ConverterClassAbstract $sut;
+    private ConverterAbstract $sut;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $converterProvider = $this->createMock(ConverterProviderInterface::class);
-        $converter = new class($converterProvider) extends ConverterClassAbstract{
+        $this->sut = new class() extends ConverterAbstract {
+            protected const string CONVERTER_FOR_CLASSNAME = \DateTimeInterface::class;
+
+            public function array(\DateTimeInterface $class, array $context = []): array
+            {
+                return ['test'];
+            }
+        };
+    }
+
+    public function testSupportsClassName(): void
+    {
+        $this->assertSame(\DateTimeInterface::class, $this->sut->builderForClassname());
+    }
+
+    public function testIsClassSupportedWillReturnTrue(): void
+    {
+        $this->assertTrue($this->sut->isClassSupported(\DateTimeImmutable::class));
+    }
+
+    public function testIsClassSupportedInterfaceWillReturnTrue(): void
+    {
+        $this->sut = new class() extends ConverterAbstract {
             protected const string CONVERTER_FOR_CLASSNAME = \DateTime::class;
 
+            public function array(\DateTime $class, array $context = []): array
+            {
+                return ['test'];
+            }
         };
-        $this->sut = new $converter($converterProvider);
-    }
-
-    public function testSupportsClassName()
-    {
-        $this->assertSame(\DateTime::class, $this->sut->supportsClassName());
-    }
-
-    public function testIsClassSupportedWillReturnTrue()
-    {
         $this->assertTrue($this->sut->isClassSupported(\DateTime::class));
     }
 
-    public function testIsClassSupportedWillReturnFalse()
+    public function testIsClassSupportedWillReturnFalse(): void
     {
-        $this->assertFalse($this->sut->isClassSupported(\Exception::class));
+        $this->assertFalse($this->sut->isClassSupported(Exception::class));
     }
 
-    public function testIsClassSupportedWillReturnTrueWhenInterfaceFallback()
+    public function testFormatIsNotSupported(): void
     {
-        $converterProvider = $this->createMock(ConverterProviderInterface::class);
-        $converter = new class($converterProvider) extends ConverterClassAbstract{
-            protected const string CONVERTER_FOR_CLASSNAME = \DateTimeInterface::class;
-
-        };
-        $this->sut = new $converter($converterProvider);
-
-        $this->assertTrue($this->sut->isClassSupported(\DateTime::class, true));
-    }
-
-    public function testFormatIsNotSupported()
-    {
-        $this->sut->registerFormatHandler('example-format', fn (object $class, array $context = []) => 'test response');
         $this->assertFalse($this->sut->isFormatSupported('other-format'));
     }
 
-    public function testFormatIsSupported()
+    public function testFormatIsSupported(): void
     {
-        $this->sut->registerFormatHandler('example-format', fn (object $class, array $context = []) => 'test response');
-        $this->assertTrue($this->sut->isFormatSupported('example-format'));
+        $this->assertTrue($this->sut->isFormatSupported('array'));
     }
 
-    public function testConvert()
+    public function testConvert(): void
     {
-        $this->sut->registerFormatHandler('example-format', fn (object $class, array $context = []) => 'test response');
-        $result = $this->sut->convert(new \DateTime(), 'example-format');
-        $this->assertSame('test response', $result);
-    }
-
-    public function testConvertWithFallback()
-    {
-        $converterProvider = $this->createMock(ConverterProviderInterface::class);
-        $converter = new class($converterProvider) extends ConverterClassAbstract{
-            protected const string CONVERTER_FOR_CLASSNAME = \DateTimeInterface::class;
-
-        };
-        $this->sut = new $converter($converterProvider);
-
-        $this->sut->registerFormatHandler('example-format', fn (object $class, array $context = []) => 'test response');
-        $result = $this->sut->convert(new \DateTime(), 'example-format', withFallback: true);
-        $this->assertSame('test response', $result);
+        $result = $this->sut->build(new \DateTimeImmutable(), 'array');
+        $this->assertSame(['test'], $result);
     }
 }

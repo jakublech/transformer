@@ -10,71 +10,40 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter;
 
+use JakubLech\Converter\Interface\ConverterInterface;
+use JakubLech\Converter\Interface\ConverterProviderInterface;
 use RuntimeException;
-use \ReflectionClass;
 
-class ConverterProvider implements ConverterProviderInterface
+final class ConverterProvider implements ConverterProviderInterface
 {
-    /**
-     * @var ConverterClassInterface[]
-     */
-    private array $convertersByClassName = [];
-
-    public function register(ConverterClassInterface $converter): void
+    private array $buildersByClassName = [];
+    public function register(ConverterInterface $converter): void
     {
-        $this->convertersByClassName[$converter->supportsClassName()] = $converter;
+        $this->buildersByClassName[$converter->builderForClassname()] = $converter;
     }
 
-    public function isSupported(string $classname, bool $withFallback = false): bool
+    public function find(string $classname): ?ConverterInterface
     {
-        if (isset($this->convertersByClassName[$classname])) {
-            return true;
+        if (isset($this->buildersByClassName[$classname])) {
+            return $this->buildersByClassName[$classname];
         }
 
-        if ($withFallback && null !== $this->findFallbackClass($classname)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function provide(object $classname, bool $withFallback = false): ConverterClassInterface
-    {
-        if (true === $this->isSupported($classname::class)) {
-            return $this->convertersByClassName[$classname::class];
-        }
-
-        if (true === $withFallback && null !== $fallbackClass = $this->findFallbackClass($classname::class)) {
-            return $this->convertersByClassName[$fallbackClass];
-        }
-
-        throw new RuntimeException('Converter not found for class ' . $classname::class);
-    }
-
-    private function findFallbackClass(string $classname): ?string
-    {
-        $fallbackClasses = array_merge($this->getAbstractClasses($classname), class_implements($classname));
-        foreach ($fallbackClasses as $fallbackClass) {
-            if ($this->isSupported($fallbackClass)) {
-                return $fallbackClass;
+        foreach ($this->buildersByClassName as $supportedClassName => $builder) {
+            if (is_subclass_of($classname, $supportedClassName)) {
+                return $builder;
             }
         }
 
         return null;
     }
 
-    private function getAbstractClasses(string $classname): array
+    public function build($object, string $format, array $context = []): mixed
     {
-        $abstractClasses = [];
-        $reflectionClass = new ReflectionClass($classname);
-
-        while ($parent = $reflectionClass->getParentClass()) {
-            if ($parent->isAbstract()) {
-                $abstractClasses[] = $parent->getName();
-            }
-            $reflectionClass = $parent;
+        $builder = $this->find($object::class);
+        if (null === $builder) {
+            throw new RuntimeException('No builder found for class ' . get_class($object));
         }
 
-        return $abstractClasses;
+        return $builder->build($object, $format, $context);
     }
 }

@@ -10,13 +10,16 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter\Tests\Functional;
 
-use JakubLech\Converter\ConverterClassAbstract;
-use JakubLech\Converter\ConverterClassInterface;
+use JakubLech\Converter\ConverterAbstract;
 use JakubLech\Converter\ConverterProvider;
-use JakubLech\Converter\ConverterProviderInterface;
+use JakubLech\Converter\ConverterSelfRegisteredAbstract;
+use JakubLech\Converter\Interface\ConverterInterface;
+use JakubLech\Converter\Interface\ConverterProviderInterface;
 use PHPUnit\Framework\TestCase;
+use DateTimeInterface;
+use Exception;
 
-class ConverterTest extends TestCase
+final class ConverterTest extends TestCase
 {
     private ConverterProvider $sut;
 
@@ -30,33 +33,26 @@ class ConverterTest extends TestCase
 
     public function testGeneral(): void
     {
-        $exception = new \Exception('test', 123);
-        $this->assertEquals(['error' => 'test', 'code' => 123], $this->sut->provide($exception)->convert($exception, 'array'));
-        $this->assertEquals('{"error":"test","code":123}', $this->sut->provide($exception)->convert($exception, 'json'));
+        $exception = new Exception('test', 123);
+        $this->assertEquals(['error' => 'test', 'code' => 123], $this->sut->find($exception::class)->build($exception, 'array'));
+        $this->assertEquals('{"error":"test","code":123}', $this->sut->find($exception::class)->build($exception, 'json'));
 
-        $dateTime = new \DateTime('2021-01-01 12:00:00');
-        $this->assertEquals('2021-01-01 12:00:00', $this->sut->provide($dateTime, true)->convert($dateTime, 'date-default', withFallback: true));
-        $this->assertEquals('1609502400', $this->sut->provide($dateTime, true)->convert($dateTime, 'unixtime', withFallback: true));
-        $this->assertEquals('2021-01-01', $this->sut->provide($dateTime, true)->convert($dateTime, 'date-custom', ['_format' => 'Y-m-d'], withFallback: true));
+        $dateTime = new \DateTimeImmutable('2021-01-01 12:00:00');
+        $this->assertEquals(['date' => '20210101', 'time' => '120000',], $this->sut->find($dateTime::class)->build($dateTime, 'array'));
     }
 
-    private function getExceptionConverter(ConverterProviderInterface $converterProvider): ConverterClassInterface
+    private function getExceptionConverter(ConverterProviderInterface $converterProvider): ConverterInterface
     {
-        return new class($converterProvider) extends ConverterClassAbstract{
+        return new class ($converterProvider) extends ConverterSelfRegisteredAbstract {
 
-            public function __construct(\JakubLech\Converter\ConverterProviderInterface $converterProvider)
-            {
-                parent::__construct($converterProvider);
-                $this->registerFormatHandler('array', fn (\Exception $class, array $context = []): array => $this->toArray($class, $context));
-                $this->registerFormatHandler('json', fn (\Exception $class, array $context = []): string => $this->toJson($class, $context));
+            public const CONVERTER_FOR_CLASSNAME = Exception::class;
 
-            }
             public function supportsClassName(): string
             {
-                return \Exception::class;
+                return Exception::class;
             }
 
-            public function toArray(\Exception $exception, array $context = []): array
+            public function array(Exception $exception, array $context = []): array
             {
                 return [
                     'error' => $exception->getMessage(),
@@ -64,29 +60,27 @@ class ConverterTest extends TestCase
                 ];
             }
 
-            public function toJson(\Exception $exception, array $context = []): string
+            public function json(Exception $exception, array $context = []): string
             {
-                return json_encode($this->convert($exception, 'array', $context), $context['_flags'] ?? 0, $context['_depth'] ?? 512);
+                return json_encode($this->build($exception, 'array', $context), $context['_flags'] ?? 0, $context['_depth'] ?? 512);
             }
         };
     }
 
-    private function getDateTimeInterfaceConverter(ConverterProviderInterface $converterProvider): ConverterClassInterface
+    private function getDateTimeInterfaceConverter(ConverterProviderInterface $converterProvider): ConverterInterface
     {
-        return new class($converterProvider) extends ConverterClassAbstract{
+        return new class () extends ConverterAbstract {
 
-            public function __construct(\JakubLech\Converter\ConverterProviderInterface $converterProvider)
+            public const CONVERTER_FOR_CLASSNAME = DateTimeInterface::class;
+
+            public function array(DateTimeInterface $dateTime, array $context = []): array
             {
-                parent::__construct($converterProvider);
-                $this->registerFormatHandler('date-default', fn (\DateTimeInterface $class, array $context = []): string => $class->format('Y-m-d H:i:s'));
-                $this->registerFormatHandler('unixtime', fn (\DateTimeInterface $class, array $context = []): string => $class->format('U'));
-                $this->registerFormatHandler('date-custom', fn (\DateTimeInterface $class, array $context = []): string => $class->format($context['_format']));
+                return [
+                    'date' => $dateTime->format('Ymd'),
+                    'time' => $dateTime->format('His'),
+                ];
             }
 
-            public function supportsClassName(): string
-            {
-                return \DateTimeInterface::class;
-            }
         };
     }
 }

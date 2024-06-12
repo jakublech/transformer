@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace JakubLech\Converter\Converter\Throwable;
 
-use JakubLech\Converter\ConverterProviderInterface;
 use JakubLech\Converter\ConverterClassAbstract;
+use JakubLech\Converter\Interface\ConverterProviderInterface;
 use Throwable;
 
-class ThrowableConverter extends ConverterClassAbstract
+final class ThrowableConverter extends ConverterClassAbstract
 {
     protected const string BUILDER_FOR_CLASSNAME = Throwable::class;
 
@@ -22,9 +22,9 @@ class ThrowableConverter extends ConverterClassAbstract
     {
         parent::__construct($this->converterProvider);
 
-        $this->registerFormatHandler('array', fn (Throwable $class, array $context = []): array => $this->toArray($class, $context));
-        $this->registerFormatHandler('json', fn (Throwable $class, array $context = []) => json_encode($this->convert($class, 'array', $context)));
-        $this->registerFormatHandler('jsonResponse', fn (Throwable $class, array $context = []) => $this->toJsonResponse($class, $context));
+        $this->registerFormatHandler('array', fn(Throwable $class, array $context = []): array => $this->toArray($class, $context));
+        $this->registerFormatHandler('json', fn(Throwable $class, array $context = []) => json_encode($this->convert($class, 'array', $context)));
+        $this->registerFormatHandler('jsonResponse', fn(Throwable $class, array $context = []) => $this->toJsonResponse($class, $context));
     }
 
     public function toArray(Throwable $exception, array $context = []): array
@@ -40,7 +40,7 @@ class ThrowableConverter extends ConverterClassAbstract
         return new JsonResponse(
             $this->convert($exception, 'json', $context),
             $context['_status'] ?? 503,
-            $context['_header'] ?? ['Content-Type' => 'application/json']
+            $context['_header'] ?? ['Content-Type' => 'application/json'],
         );
     }
 }

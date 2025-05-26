@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Exception;
 
-use RuntimeException;
+use InvalidArgumentException;
 
-final class UnsupportedInputTypeException extends RuntimeException
+final class UnsupportedInputTypeException extends InvalidArgumentException
 {
 }

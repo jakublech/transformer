@@ -15,15 +15,17 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\ArrayToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
-final class ArrayToJsonTransformerTest extends TestCase
+class ArrayToJsonTransformerTest extends TestCase
 {
     /** @var ArrayToJsonTransformer */
     private $sut;
 
-    /** @test */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->sut = new ArrayToJsonTransformer();
+    }
+
     public function testInvoke(): void
     {
         $input = ['key' => 'value', 'another_key' => 123];
@@ -35,7 +37,6 @@ final class ArrayToJsonTransformerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
     public function testInvokeWithEmptyArray(): void
     {
         $input = [];
@@ -47,7 +48,7 @@ final class ArrayToJsonTransformerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /** @test */
+
     public function testInvokeWithNoArrayWillThrowException(): void
     {
         $input = 'not-an-array';
@@ -56,27 +57,18 @@ final class ArrayToJsonTransformerTest extends TestCase
         ($this->sut)($input);
     }
 
-    /** @test */
     public function testPriority(): void
     {
         $this->assertEquals(-1000, ArrayToJsonTransformer::priority());
     }
 
-    /** @test */
     public function testInputType(): void
     {
         $this->assertEquals('array', ArrayToJsonTransformer::inputType());
     }
 
-    /** @test */
     public function testReturnType(): void
     {
         $this->assertEquals('json', ArrayToJsonTransformer::returnType());
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->sut = new ArrayToJsonTransformer();
     }
 }

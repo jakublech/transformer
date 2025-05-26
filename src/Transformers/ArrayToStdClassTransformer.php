@@ -14,25 +14,26 @@ namespace JakubLech\Transformer\Transformers;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use stdClass;
 
-final class ArrayToJsonTransformer implements TransformerInterface
+final class ArrayToStdClassTransformer implements TransformerInterface
 {
     /**
+     * @param array $input
      * @throws TransformException | UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): string
+    public function __invoke(mixed $input, array $context = []): stdClass
     {
         AssertInputType::strict($input, $this);
 
-        $flags = $context['_flags'] ?? 0;
-        $depth = $context['_depth'] ?? 512;
-
-        $result = json_encode($input, $flags, $depth);
-        if (JSON_ERROR_NONE !== json_last_error() || false === $result) {
-            throw new TransformException('Can not transform array to json. ' . json_last_error_msg());
+        $stdClass = new stdClass();
+        foreach ($input as $key => $value) {
+            $stdClass->$key = (is_array($value))
+                ? ($this)($input, $context)
+                : $value;
         }
 
-        return $result;
+        return $stdClass;
     }
 
     public static function inputType(): string
@@ -42,7 +43,7 @@ final class ArrayToJsonTransformer implements TransformerInterface
 
     public static function returnType(): string
     {
-        return 'json';
+        return stdClass::class;
     }
 
     public static function priority(): int

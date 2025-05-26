@@ -13,10 +13,14 @@ namespace JakubLech\Transformer\Transformers;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transform;
 use Throwable;
 
-final class ThrowableToJsonTransformer implements TransformerInterface
+final class ObjectToJsonTransformer implements TransformerInterface
 {
+    public function __construct(private Transform $transform)
+    {
+    }
     /**
      * @param Throwable $input
      * @throws UnsupportedInputTypeException
@@ -25,8 +29,18 @@ final class ThrowableToJsonTransformer implements TransformerInterface
     {
         AssertInputType::strict($input, $this);
 
+        /**
+         * Possible strategies:
+         * useReflection //default
+         * usePublicProperties
+         * useGetterBased
+         * useJsonEncodeDecode
+         * useSerializationBased
+         */
+        $context['_strategyObjectToArray'] = $context['_strategyObjectToArray'] ?? 'useReflection';
+
         return (new ArrayToJsonTransformer())(
-            (new ThrowableToArrayTransformer())(
+            (new ObjectToArrayTransformer($this->transform))(
                 $input,
                 $context
             ),
@@ -36,7 +50,7 @@ final class ThrowableToJsonTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return Throwable::class;
+        return 'object';
     }
 
     public static function returnType(): string

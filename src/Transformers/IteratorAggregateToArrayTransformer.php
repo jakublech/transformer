@@ -14,22 +14,27 @@ namespace JakubLech\Transformer\Transformers;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transform;
+use IteratorAggregate;
 
-final class ArrayToJsonTransformer implements TransformerInterface
+final class IteratorAggregateToArrayTransformer implements TransformerInterface
 {
+    public function __construct(private Transform $transform)
+    {
+    }
+
     /**
+     * @param IteratorAggregate $input
      * @throws TransformException | UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): string
+    public function __invoke(mixed $input, array $context = []): array
     {
         AssertInputType::strict($input, $this);
 
-        $flags = $context['_flags'] ?? 0;
-        $depth = $context['_depth'] ?? 512;
-
-        $result = json_encode($input, $flags, $depth);
-        if (JSON_ERROR_NONE !== json_last_error() || false === $result) {
-            throw new TransformException('Can not transform array to json. ' . json_last_error_msg());
+        $properties = iterator_to_array($input->getIterator());
+        $result = [];
+        foreach ($properties as $key => $property) {
+            $result[$key] = is_object($property) ? ($this->transform)($property, $this::returnType()) : $property;
         }
 
         return $result;
@@ -37,12 +42,12 @@ final class ArrayToJsonTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return 'array';
+        return \IteratorAggregate::class;
     }
 
     public static function returnType(): string
     {
-        return 'json';
+        return 'array';
     }
 
     public static function priority(): int

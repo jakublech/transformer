@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Transformers;
 
+use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use Throwable;
 
@@ -18,12 +19,11 @@ final class ThrowableToArrayTransformer implements TransformerInterface
 {
     /**
      * @param Throwable $input
+     * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        if (!is_a($input, self::inputType())) {
-            throw new UnsupportedInputTypeException();
-        }
+        AssertInputType::strict($input, $this);
 
         return [
             'error' => $input->getMessage(),

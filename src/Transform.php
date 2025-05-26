@@ -16,16 +16,17 @@ use JakubLech\Transformer\Transformers\TransformerInterface;
 
 final class Transform
 {
-    /** @var array<string, array<string, TransformerInterface>> */
+    /** @var TransformerInterface[] | array<string, TransformerInterface> */
     private array $transformers = [];
 
-    private array $classCache = [];
+    /** @var array<string, array<int, string>> */
+    private array $classInheritanceCache = [];
 
     /** @param iterable|TransformerInterface[] $transformers */
     public function __construct(iterable $transformers = [])
     {
         foreach ($transformers as $transformer) {
-            $this->addTransformer($transformer);
+            $this->add($transformer);
         }
     }
 
@@ -34,10 +35,10 @@ final class Transform
      */
     public function __invoke(mixed $input, string $outputType, array $context = []): mixed
     {
-        return $this->getTransformer($input, $outputType)->__invoke($input, $context);
+        return $this->get($input, $outputType)->__invoke($input, $context);
     }
 
-    public function addTransformer(TransformerInterface $transformer): void
+    public function add(TransformerInterface $transformer): void
     {
         $transformerKeyPair = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
         if (!isset($this->transformers[$transformerKeyPair])
@@ -49,38 +50,26 @@ final class Transform
     /**
      * @throws UnsupportedTransformationException
      */
-    public function getTransformer(mixed $input, string $outputType): TransformerInterface
+    public function get(mixed $input, string $outputType): TransformerInterface
     {
-        $inputType = gettype($input);
-        if ('object' === $inputType) {
-            foreach ($this->getClassTypes($input) as $inputType) {
-                if ($transformer = $this->transformers[$this->getTransformerKeyPair($type, $outputType)] ?? null) {
-                    return $transformer;
-                }
+        foreach ($this->getInheritedTypes($input) as $inputType) {
+            if ($transformer = $this->transformers[$this->getTransformerKeyPair($inputType, $outputType)] ?? null) {
+                return $transformer;
             }
         }
 
-        // for simple type
-        $transformerKeyPair = $this->getTransformerKeyPair($inputType, $outputType);
-
-        return $this->transformers[$transformerKeyPair]
-            ?? throw new UnsupportedTransformationException(sprintf(
-                'No transformer from %s to %s. Registered: %s',
-                $inputType,
-                $outputType,
-                implode(', ', array_keys($this->transformers)),
-            ));
+        throw new UnsupportedTransformationException(sprintf(
+            'No transformer from %s to %s. Registered: %s',
+            $inputType,
+            $outputType,
+            implode(', ', array_keys($this->transformers)),
+        ));
     }
 
-    public function supports(mixed $input, string $outputType): bool
-    {
-        return (bool) $this->findTransformer($input, $outputType);
-    }
-
-    public function findTransformer(mixed $input, string $outputType): ?TransformerInterface
+    public function find(mixed $input, string $outputType): ?TransformerInterface
     {
         try {
-            return $this->getTransformer($input, $outputType);
+            return $this->get($input, $outputType);
         } catch (UnsupportedTransformationException $e) {
             return null;
         }
@@ -89,19 +78,20 @@ final class Transform
     /**
      * @return array<int, string>
      */
-    private function getClassTypes(object $input): array
+    private function getInheritedTypes(mixed $input): array
     {
-        $class = get_class($input);
-
-        return $this->classCache[$class] ??= [
-            $class,
-            ...(array) class_parents($input) ?: [],
-            ...(array) class_implements($input) ?: [],
-        ];
+        return 'object' !== ($inputType = gettype($input))
+            ? [$inputType]
+            : $this->classInheritanceCache[$className = get_class($input)] ??= [
+                $className,
+                ...class_parents($input) ?: [],
+                ...class_implements($input) ?: [],
+                'object',
+            ];
     }
 
     private function getTransformerKeyPair(string $inputType, string $outputType): string
     {
-        return sprintf('%s:%s', $inputType, $outputType);
+        return sprintf('%s:TransformsTo:%s', $inputType, $outputType);
     }
 }

@@ -52,28 +52,12 @@ final class TransformTest extends TestCase
         ($this->sut)($input, $outputType);
     }
 
-    public function testSupportsReturnsTrueForSupportedTransformation(): void
-    {
-        $input = ['key' => 'value'];
-        $outputType = 'json';
-
-        $this->assertTrue($this->sut->supports($input, $outputType));
-    }
-
-    public function testSupportsReturnsFalseForUnsupportedTransformation(): void
-    {
-        $input = 'unsupported-input';
-        $outputType = 'json';
-
-        $this->assertFalse($this->sut->supports($input, $outputType));
-    }
-
     public function testFindTransformerReturnsTransformerForSupportedTransformation(): void
     {
         $input = ['key' => 'value'];
         $outputType = 'json';
 
-        $transformer = $this->sut->findTransformer($input, $outputType);
+        $transformer = $this->sut->find($input, $outputType);
 
         $this->assertSame($this->transformer, $transformer);
     }
@@ -83,7 +67,7 @@ final class TransformTest extends TestCase
         $input = 'unsupported-input';
         $outputType = 'json';
 
-        $transformer = $this->sut->findTransformer($input, $outputType);
+        $transformer = $this->sut->find($input, $outputType);
 
         $this->assertNull($transformer);
     }

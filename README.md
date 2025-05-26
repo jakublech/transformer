@@ -5,9 +5,9 @@
 
 ## Description
 
-PHP Transformer Library provides robust, type-safe object conversion between any PHP data structures. Acting as a lightweight transformation pipeline, it specializes in strict domain object conversion while avoiding the overhead of full serialization. The library shines when you need to:
+PHP Transformer Library provides robust, type-safe object conversion between any PHP data structures. Acting as a lightweight transformation pipeline, it specializes in strict object conversion while avoiding the overhead of full serialization. The library shines when you need to:
 
-- Convert business objects between application layers with guaranteed type safety
+- Convert objects and any types between application layers with guaranteed type safety
 - Transform data formats without coupling to specific frameworks
 - Handle complex object graphs with explicit transformation rules
 - Achieve better performance than serialization-based alternatives
@@ -24,7 +24,7 @@ Key advantages include runtime type enforcement, priority-based transformation r
 
 **Performance Optimized**
 - 2-3x faster than serialization-based solutions for object conversion
-- Minimal overhead through smart reflection caching
+- Minimal overhead through smart caching
 
 **Clean Architecture**
 - Single-responsibility transformers
@@ -32,7 +32,9 @@ Key advantages include runtime type enforcement, priority-based transformation r
 - Decoupled from any specific framework
 
 **Developer Experience**
-- Intuitive priority system for transformation conflicts
+- Easy to extend and/or override any transformer
+- Full dependency injection support for transformers
+- Intuitive priority system to prevent transformation conflicts
 - Context parameter for runtime customization
 - Excellent IDE support through type hints
 
@@ -70,7 +72,7 @@ Key advantages include runtime type enforcement, priority-based transformation r
 ### Ideal Use Cases
 
 **Choose This Library When:**
-- Transforming business objects between layers
+- Transforming objects between layers
 - Strict type safety is required
 - Working outside Symfony ecosystem
 - Performance is critical
@@ -80,22 +82,20 @@ Key advantages include runtime type enforcement, priority-based transformation r
 - Need multiple output formats (JSON/XML/YAML)
 - Already using Symfony ecosystem
 - Complex serialization rules needed
-## Pre-Implemented Transformers
+
+## Pre-Implemented Demo Transformers
 
 1. **ArrayToJsonTransformer**  
-   Usage: `$transform($array, 'json')` → Returns JSON string
+   `$transform($array, 'json')` → Returns JSON string
 
-2. **ArrayToSymfonyJsonResponse**  
-   Usage: `$transform($array, JsonResponse::class)` → Returns Symfony response
+2. **StringableToStringTransformer**  
+   `$transform($stringableObject, 'string')` → Returns string output
 
-3. **StringableToStringTransformer**  
-   Usage: `$transform($stringableObject, 'string')` → Returns string output
+3. **ThrowableToArrayTransformer**  
+   `$transform($exception, 'array')` → Returns structured error array
 
-4. **ThrowableToArrayTransformer**  
-   Usage: `$transform($exception, 'array')` → Returns structured error array
-
-5. **ThrowableToJsonTransformer**  
-   Usage: `$transform($exception, 'json')` → Returns JSON error string
+4. **ThrowableToJsonTransformer**  
+   `$transform($exception, 'json')` → Returns JSON error string
 
 ## Implementation Guide
 
@@ -105,7 +105,7 @@ Key advantages include runtime type enforcement, priority-based transformation r
 ```
 
 ### Basic Usage
-```
+```php
 $transform = new Transform([
     new ArrayToJsonTransformer(),
     new ThrowableToArrayTransformer()
@@ -115,7 +115,7 @@ $result = $transform($input, 'json');
 ```
 ### Custom Transformer Example
 
-```
+```php
 class MoneyTransformer implements TransformerInterface {
     public function __invoke($input, array $context): string {
         return $input->format();

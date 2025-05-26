@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -11,37 +10,32 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Transformers;
 
+
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use Throwable;
 
-final class ThrowableToJsonTransformer implements TransformerInterface
+class JsonSerializableToArray implements TransformerInterface
 {
     /**
-     * @param Throwable $input
+     * @param \JsonSerializable $input
      * @throws UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): string
+    public function __invoke(mixed $input, array $context = []): array
     {
         AssertInputType::strict($input, $this);
 
-        return (new ArrayToJsonTransformer())(
-            (new ThrowableToArrayTransformer())(
-                $input,
-                $context
-            ),
-            $context
-        );
+        $array = $input->jsonSerialize();
+        return is_array($array) ? $array : ['value' => $array];
     }
 
     public static function inputType(): string
     {
-        return Throwable::class;
+        return \JsonSerializable::class;
     }
 
     public static function returnType(): string
     {
-        return 'json';
+        return 'array';
     }
 
     public static function priority(): int

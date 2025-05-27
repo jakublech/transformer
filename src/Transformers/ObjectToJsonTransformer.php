@@ -22,7 +22,7 @@ final class ObjectToJsonTransformer implements TransformerInterface
     {
     }
     /**
-     * @param Throwable $input
+     * @param object $input
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): string
@@ -39,11 +39,9 @@ final class ObjectToJsonTransformer implements TransformerInterface
          */
         $context['_strategyObjectToArray'] = $context['_strategyObjectToArray'] ?? 'useReflection';
 
-        return (new ArrayToJsonTransformer())(
-            (new ObjectToArrayTransformer($this->transform))(
-                $input,
-                $context
-            ),
+        return ($this->transform)(
+            ($this->transform)($input, 'array', $context),
+            'json',
             $context
         );
     }

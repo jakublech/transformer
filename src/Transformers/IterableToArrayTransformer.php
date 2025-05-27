@@ -17,24 +17,24 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use IteratorAggregate;
 
-final class IteratorAggregateToArrayTransformer implements TransformerInterface
+final class IterableToArrayTransformer implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param IteratorAggregate $input
+     * @param iterable $input
      * @throws TransformException | UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        return ($this->transform)((array) $input, 'array', $context);
+        return ($this->transform)(iterator_to_array($input), 'array', $context);
     }
 
     public static function inputType(): string
     {
-        return \IteratorAggregate::class;
+        return 'iterable';
     }
 
     public static function returnType(): string

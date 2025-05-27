@@ -9,7 +9,7 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Tests\Unit;
+namespace JakubLech\Transformer\Tests\Unit\Transformer;
 
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\ArrayToJsonTransformer;

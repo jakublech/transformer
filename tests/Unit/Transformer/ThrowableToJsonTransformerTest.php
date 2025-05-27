@@ -9,39 +9,38 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Tests\Unit;
+namespace JakubLech\Transformer\Tests\Unit\Transformer;
 
-use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\ThrowableToArrayTransformer;
-use PHPUnit\Framework\TestCase;
 use Exception;
-use Throwable;
+use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transformers\ThrowableToJsonTransformer;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversNothing
  */
-final class ThrowableToArrayTransformerTest extends TestCase
+final class ThrowableToJsonTransformerTest extends TestCase
 {
-    private ThrowableToArrayTransformer $sut;
+    private ThrowableToJsonTransformer $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sut = new ThrowableToArrayTransformer();
+        $this->sut = new ThrowableToJsonTransformer();
     }
 
     public function testInvokeWithThrowable(): void
     {
         $throwable = new Exception('Test exception', 123);
-        $expected = [
+        $expected = json_encode([
             'error' => 'Test exception',
             'code' => 123,
-        ];
+        ]);
 
         $result = ($this->sut)($throwable);
 
-        $this->assertIsArray($result);
-        $this->assertEquals($expected, $result);
+        $this->assertIsString($result);
+        $this->assertJsonStringEqualsJsonString($expected, $result);
     }
 
     public function testInvokeWithNonThrowableThrowsException(): void
@@ -54,16 +53,16 @@ final class ThrowableToArrayTransformerTest extends TestCase
 
     public function testPriority(): void
     {
-        $this->assertEquals(-1000, ThrowableToArrayTransformer::priority());
+        $this->assertEquals(-1000, ThrowableToJsonTransformer::priority());
     }
 
     public function testInputType(): void
     {
-        $this->assertEquals(Throwable::class, ThrowableToArrayTransformer::inputType());
+        $this->assertEquals('Throwable', ThrowableToJsonTransformer::inputType());
     }
 
     public function testReturnType(): void
     {
-        $this->assertEquals('array', ThrowableToArrayTransformer::returnType());
+        $this->assertEquals('json', ThrowableToJsonTransformer::returnType());
     }
 }

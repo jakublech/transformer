@@ -59,7 +59,7 @@ final class Transform
         }
 
         throw new UnsupportedTransformationException(sprintf(
-            'No transformer from %s to %s. Registered: %s',
+            'No transformer from %s to %s. Registered transformers are: [%s]',
             $inputType,
             $outputType,
             implode(', ', array_keys($this->transformers)),
@@ -85,7 +85,7 @@ final class Transform
             : $this->classInheritanceCache[$className = get_class($input)] ??= [
                 $className,
                 ...class_parents($input) ?: [],
-                ...class_implements($input) ?: [],
+                ...array_reverse(class_implements($input) ?: []),
                 'object',
             ];
     }

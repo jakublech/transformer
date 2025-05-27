@@ -13,19 +13,21 @@ namespace JakubLech\Transformer\Transformers;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transform;
 
 class JsonSerializableToArray implements TransformerInterface
 {
+    public function __construct(private Transform $transform)
+    {
+    }
+
     /**
      * @param \JsonSerializable $input
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        AssertInputType::strict($input, $this);
-
-        $array = $input->jsonSerialize();
-        return is_array($array) ? $array : ['value' => $array];
+        return ($this->transform)($input->jsonSerialize(), 'array', $context);
     }
 
     public static function inputType(): string

@@ -34,11 +34,10 @@ final class ObjectToArrayTransformer implements TransformerInterface
 
         /**
          * Possible strategies:
-         * useReflection //default
+         * useReflection
          * usePublicProperties
          * useGetterBased
          * useJsonEncodeDecode
-         * useSerializationBased
          */
         $method = $context['_strategyObjectToArray'] ?? 'useReflection';
 
@@ -54,8 +53,8 @@ final class ObjectToArrayTransformer implements TransformerInterface
             $property->setAccessible(true);
             $value = $property->getValue($input);
 
-            // Recursive transformation for nested objects
-            $result[$property->getName()] = is_object($value)
+            // Recursive transformation for nested objects and arrays
+            $result[$property->getName()] = is_object($value) || is_array($value)
                 ? ($this->transform)($value, 'array', $context)
                 : $value;
         }
@@ -67,8 +66,8 @@ final class ObjectToArrayTransformer implements TransformerInterface
     {
         $array = (array)$input;
 
-        array_walk_recursive($array, function (&$value, $context)  {
-            if (is_object($value)) {
+        array_walk_recursive($array, function (&$value) use ($context)  {
+            if (is_object($value) || is_array($value)) {
                 $value = ($this->transform)($value, 'array', $context);
             }
         });
@@ -82,7 +81,9 @@ final class ObjectToArrayTransformer implements TransformerInterface
         foreach (get_class_methods($input) as $method) {
             if (str_starts_with($method, 'get')) {
                 $key = lcfirst(substr($method, 3));
-                $array[$key] = is_object($input->$method()) ? ($this->transform)($input, 'array', $context) : $input->$method();
+                $array[$key] = is_object($input->$method()) || is_array($input->$method())
+                    ? ($this->transform)($input, 'array', $context)
+                    : $input->$method();
             }
         }
         return $array;
@@ -99,16 +100,5 @@ final class ObjectToArrayTransformer implements TransformerInterface
         }
 
         return (array) json_decode($result, true, $depth, $flags);
-    }
-
-    public function useSerializationBased(mixed $input, array $context = []): array
-    {
-        //loses nested objects
-        $serialized = serialize($input);
-        // Extract properties from serialized string
-        preg_match_all('/s:\d+:"(.*?)";/', $serialized, $matches);
-        $properties = array_combine($matches[1], array_values((array)$input));
-
-        return $properties;
     }
 }

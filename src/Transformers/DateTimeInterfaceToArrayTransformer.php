@@ -17,24 +17,26 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use IteratorAggregate;
 
-final class IteratorAggregateToArrayTransformer implements TransformerInterface
+final class DateTimeInterfaceToArrayTransformer implements TransformerInterface
 {
-    public function __construct(private Transform $transform)
-    {
-    }
-
     /**
-     * @param IteratorAggregate $input
+     * @param \DateTimeInterface $input
      * @throws TransformException | UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        return ($this->transform)((array) $input, 'array', $context);
+        AssertInputType::strict($input, $this);
+
+        return [
+            'date' => $input->format('Y-m-d H:i:s.u'),
+            'timezone_type' => 3,
+            'timezone' => $input->getTimezone()->getName(),
+        ];
     }
 
     public static function inputType(): string
     {
-        return \IteratorAggregate::class;
+        return \DateTimeInterface::class;
     }
 
     public static function returnType(): string

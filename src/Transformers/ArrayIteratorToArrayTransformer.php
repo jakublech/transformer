@@ -17,14 +17,14 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use IteratorAggregate;
 
-final class IteratorAggregateToArrayTransformer implements TransformerInterface
+final class ArrayIteratorToArrayTransformer implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param IteratorAggregate $input
+     * @param iterable $input
      * @throws TransformException | UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
@@ -34,7 +34,7 @@ final class IteratorAggregateToArrayTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \IteratorAggregate::class;
+        return \ArrayIterator::class;
     }
 
     public static function returnType(): string

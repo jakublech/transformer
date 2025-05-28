@@ -18,7 +18,7 @@ use JakubLech\Transformer\Exception\UnsupportedTransformationException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ObjectToCompositeTransformer implements TransformerInterface
+final class ObjectToArrayCompositeTransformer implements TransformerInterface
 {
     public static function inputType(): string {return 'object';}
     public static function returnType(): string {return 'array';}

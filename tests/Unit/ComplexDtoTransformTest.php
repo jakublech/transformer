@@ -24,7 +24,7 @@ use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransfor
 use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
 use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\JsonSerializableToArray;
-use JakubLech\Transformer\Transformers\GenericObject\ObjectToCompositeTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\ObjectToArrayCompositeTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
 use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
@@ -54,7 +54,7 @@ final class ComplexDtoTransformTest extends TestCase
             new IterableToArrayTransformer($this->sut),
             new IteratorAggregateToArrayTransformer($this->sut),
             new JsonSerializableToArray($this->sut),
-            new ObjectToCompositeTransformer($this->sut),
+            new ObjectToArrayCompositeTransformer($this->sut),
             new ObjectToJsonTransformer($this->sut),
             new StringableToArrayTransformer(),
             new StdClassToArray($this->sut),

@@ -21,13 +21,13 @@ use JakubLech\Transformer\Transformers\Array\IteratorAggregateToArrayTransformer
 use JakubLech\Transformer\Transformers\Callable\CallableToArrayTransformer;
 use JakubLech\Transformer\Transformers\Callable\ClosureToArrayTransformer;
 use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransformer;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
-use JakubLech\Transformer\Transformers\GenericObject\JsonSerializableToArray;
 use JakubLech\Transformer\Transformers\GenericObject\ObjectToArrayCompositeTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
+use JakubLech\Transformer\Transformers\Json\JsonSerializableToArray;
 use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
 /**

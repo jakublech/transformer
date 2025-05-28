@@ -8,8 +8,7 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers\GenericObject;
-
+namespace JakubLech\Transformer\Transformers\Json;
 
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;

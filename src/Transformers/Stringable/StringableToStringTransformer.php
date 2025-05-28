@@ -9,13 +9,14 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Stringable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 use Stringable;
 
-final class StringableToArrayTransformer implements TransformerInterface
+final class StringableToStringTransformer implements TransformerInterface
 {
     /**
      * @param Stringable $input
@@ -35,7 +36,7 @@ final class StringableToArrayTransformer implements TransformerInterface
 
     public static function returnType(): string
     {
-        return 'array';
+        return 'string';
     }
 
     public static function priority(): int

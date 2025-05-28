@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\Tests\Unit\Transformer;
 
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
 class ArrayToJsonTransformerTest extends TestCase

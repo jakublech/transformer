@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -9,32 +8,31 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
-use JakubLech\Transformer\Assert\AssertInputType;
-use JakubLech\Transformer\Exception\TransformException;
+
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
-use IteratorAggregate;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class IteratorAggregateToArrayTransformer implements TransformerInterface
+class JsonSerializableToArray implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param IteratorAggregate $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param \JsonSerializable $input
+     * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        return ($this->transform)((array) $input, 'array', $context);
+        return ($this->transform)($input->jsonSerialize(), 'array', $context);
     }
 
     public static function inputType(): string
     {
-        return \IteratorAggregate::class;
+        return \JsonSerializable::class;
     }
 
     public static function returnType(): string

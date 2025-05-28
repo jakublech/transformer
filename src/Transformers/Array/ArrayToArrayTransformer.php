@@ -9,13 +9,13 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Array;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
-use IteratorAggregate;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
 /** Transforms nested arrays */
 final class ArrayToArrayTransformer implements TransformerInterface

@@ -9,18 +9,26 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transform;
+use JakubLech\Transformer\Transformers\TransformerInterface;
+use ReflectionClass;
 
-final class ArrayToJsonTransformer implements TransformerInterface
+final class ObjectToArrayUsingJsonEncodeDecodeTransformer implements TransformerInterface
 {
+    public static function inputType(): string {return 'object';}
+    public static function returnType(): string {return 'array';}
+    public static function priority(): int {return -1000;}
+
     /**
+     * @param  object $input
      * @throws TransformException | UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): string
+    public function __invoke(mixed $input, array $context = []): array
     {
         AssertInputType::strict($input, $this);
 
@@ -32,21 +40,6 @@ final class ArrayToJsonTransformer implements TransformerInterface
             throw new TransformException('Can not transform array to json. ' . json_last_error_msg());
         }
 
-        return $result;
-    }
-
-    public static function inputType(): string
-    {
-        return 'array';
-    }
-
-    public static function returnType(): string
-    {
-        return 'json';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
+        return (array) json_decode($result, true, $depth, $flags);
     }
 }

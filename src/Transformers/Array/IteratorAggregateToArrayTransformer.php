@@ -9,31 +9,32 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Array;
 
-use JakubLech\Transformer\Assert\AssertInputType;
+use IteratorAggregate;
+use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use Throwable;
+use JakubLech\Transformer\Transform;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ThrowableToArrayTransformer implements TransformerInterface
+final class IteratorAggregateToArrayTransformer implements TransformerInterface
 {
+    public function __construct(private Transform $transform)
+    {
+    }
+
     /**
-     * @param Throwable $input
-     * @throws UnsupportedInputTypeException
+     * @param IteratorAggregate $input
+     * @throws TransformException | UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        AssertInputType::strict($input, $this);
-
-        return [
-            'error' => $input->getMessage(),
-            'code' => $input->getCode(),
-        ];
+        return ($this->transform)((array) $input, 'array', $context);
     }
 
     public static function inputType(): string
     {
-        return Throwable::class;
+        return \IteratorAggregate::class;
     }
 
     public static function returnType(): string

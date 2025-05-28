@@ -9,35 +9,41 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Array;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transform;
-use IteratorAggregate;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class CallableToArrayTransformer implements TransformerInterface
+final class ArrayToJsonTransformer implements TransformerInterface
 {
     /**
-     * @param callable $input
      * @throws TransformException | UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): array
+    public function __invoke(mixed $input, array $context = []): string
     {
         AssertInputType::strict($input, $this);
 
-        return ['callable'];
+        $flags = $context['_flags'] ?? 0;
+        $depth = $context['_depth'] ?? 512;
+
+        $result = json_encode($input, $flags, $depth);
+        if (JSON_ERROR_NONE !== json_last_error() || false === $result) {
+            throw new TransformException('Can not transform array to json. ' . json_last_error_msg());
+        }
+
+        return $result;
     }
 
     public static function inputType(): string
     {
-        return 'callable';
+        return 'array';
     }
 
     public static function returnType(): string
     {
-        return 'array';
+        return 'json';
     }
 
     public static function priority(): int

@@ -9,34 +9,29 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Callable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transform;
-use IteratorAggregate;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class DateTimeInterfaceToArrayTransformer implements TransformerInterface
+final class ClosureToArrayTransformer implements TransformerInterface
 {
     /**
-     * @param \DateTimeInterface $input
+     * @param \Closure $input
      * @throws TransformException | UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
         AssertInputType::strict($input, $this);
 
-        return [
-            'date' => $input->format('Y-m-d H:i:s.u'),
-            'timezone_type' => 3,
-            'timezone' => $input->getTimezone()->getName(),
-        ];
+        return ['Closure'];
     }
 
     public static function inputType(): string
     {
-        return \DateTimeInterface::class;
+        return 'Closure';
     }
 
     public static function returnType(): string

@@ -8,31 +8,31 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
 
-use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-class JsonSerializableToArray implements TransformerInterface
+class StdClassToArray implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param \JsonSerializable $input
+     * @param \stdClass $input
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        return ($this->transform)($input->jsonSerialize(), 'array', $context);
+        return ($this->transform)((array) $input, 'array', $context);
     }
 
     public static function inputType(): string
     {
-        return \JsonSerializable::class;
+        return \stdClass::class;
     }
 
     public static function returnType(): string

@@ -13,7 +13,7 @@ namespace JakubLech\Transformer\Tests\Unit\Transformer;
 
 use Exception;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\ThrowableToJsonTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
 /**

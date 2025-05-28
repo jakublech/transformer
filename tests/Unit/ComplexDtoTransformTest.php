@@ -12,22 +12,22 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\Tests\Unit;
 
 use JakubLech\Transformer\Transform;
-use JakubLech\Transformer\Transformers\ArrayIteratorToArrayTransformer;
-use JakubLech\Transformer\Transformers\ArrayToArrayTransformer;
-use JakubLech\Transformer\Transformers\ArrayToJsonTransformer;
-use JakubLech\Transformer\Transformers\ArrayToStdClassTransformer;
-use JakubLech\Transformer\Transformers\CallableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ClosureToArrayTransformer;
-use JakubLech\Transformer\Transformers\DateTimeInterfaceToArrayTransformer;
-use JakubLech\Transformer\Transformers\IterableToArrayTransformer;
-use JakubLech\Transformer\Transformers\IteratorAggregateToArrayTransformer;
-use JakubLech\Transformer\Transformers\JsonSerializableToArray;
-use JakubLech\Transformer\Transformers\ObjectToArrayTransformer;
-use JakubLech\Transformer\Transformers\ObjectToJsonTransformer;
-use JakubLech\Transformer\Transformers\StdClassToArray;
-use JakubLech\Transformer\Transformers\StringableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ThrowableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ThrowableToJsonTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayIteratorToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToStdClassTransformer;
+use JakubLech\Transformer\Transformers\Array\IterableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\IteratorAggregateToArrayTransformer;
+use JakubLech\Transformer\Transformers\Callable\CallableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Callable\ClosureToArrayTransformer;
+use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\JsonSerializableToArray;
+use JakubLech\Transformer\Transformers\GenericObject\ObjectToCompositeTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
+use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -54,7 +54,7 @@ final class ComplexDtoTransformTest extends TestCase
             new IterableToArrayTransformer($this->sut),
             new IteratorAggregateToArrayTransformer($this->sut),
             new JsonSerializableToArray($this->sut),
-            new ObjectToArrayTransformer($this->sut),
+            new ObjectToCompositeTransformer($this->sut),
             new ObjectToJsonTransformer($this->sut),
             new StringableToArrayTransformer(),
             new StdClassToArray($this->sut),
@@ -83,12 +83,10 @@ final class ComplexDtoTransformTest extends TestCase
             'tags' => ['php', 'test', 'transformer'],
             'createdAt' => [
                 'date' => '2025-05-27 18:30:37.000000',
-                'timezone_type' => 3,
                 'timezone' => 'UTC'
             ],
             'updatedAt' => [
                 'date' => '2025-05-28 19:31:35.000000',
-                'timezone_type' => 3,
                 'timezone' => 'UTC'
             ],
             'parent' => null,
@@ -155,12 +153,10 @@ final class ComplexDtoTransformTest extends TestCase
             'tags' => ['php', 'test', 'transformer'],
             'createdAt' => [
                 'date' => '2025-05-27 18:30:37.000000',
-                'timezone_type' => 3,
                 'timezone' => 'UTC'
             ],
             'updatedAt' => [
                 'date' => '2025-05-28 19:31:35.000000',
-                'timezone_type' => 3,
                 'timezone' => 'UTC'
             ],
             'parent' => null,

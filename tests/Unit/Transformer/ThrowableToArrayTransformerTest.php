@@ -13,7 +13,7 @@ namespace JakubLech\Transformer\Tests\Unit\Transformer;
 
 use Exception;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\ThrowableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 

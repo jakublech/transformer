@@ -9,41 +9,36 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Array;
 
-use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use stdClass;
+use JakubLech\Transformer\Transform;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ArrayToStdClassTransformer implements TransformerInterface
+final class IterableToArrayTransformer implements TransformerInterface
 {
+    public function __construct(private Transform $transform)
+    {
+    }
+
     /**
-     * @param array $input
+     * @param iterable $input
      * @throws TransformException | UnsupportedInputTypeException
      */
-    public function __invoke(mixed $input, array $context = []): stdClass
+    public function __invoke(mixed $input, array $context = []): array
     {
-        AssertInputType::strict($input, $this);
-
-        $stdClass = new stdClass();
-        foreach ($input as $key => $value) {
-            $stdClass->$key = (is_array($value))
-                ? ($this)($input, $context)
-                : $value;
-        }
-
-        return $stdClass;
+        return ($this->transform)(iterator_to_array($input), 'array', $context);
     }
 
     public static function inputType(): string
     {
-        return 'array';
+        return 'iterable';
     }
 
     public static function returnType(): string
     {
-        return stdClass::class;
+        return 'array';
     }
 
     public static function priority(): int

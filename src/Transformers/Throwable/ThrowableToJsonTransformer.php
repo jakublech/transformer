@@ -9,10 +9,12 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\Throwable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 use Throwable;
 
 final class ThrowableToJsonTransformer implements TransformerInterface

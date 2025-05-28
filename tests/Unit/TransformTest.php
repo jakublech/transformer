@@ -13,22 +13,7 @@ namespace JakubLech\Transformer\Tests\Unit;
 
 use JakubLech\Transformer\Exception\UnsupportedTransformationException;
 use JakubLech\Transformer\Transform;
-use JakubLech\Transformer\Transformers\ArrayIteratorToArrayTransformer;
-use JakubLech\Transformer\Transformers\ArrayToArrayTransformer;
-use JakubLech\Transformer\Transformers\ArrayToJsonTransformer;
-use JakubLech\Transformer\Transformers\ArrayToStdClassTransformer;
-use JakubLech\Transformer\Transformers\CallableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ClosureToArrayTransformer;
-use JakubLech\Transformer\Transformers\DateTimeInterfaceToArrayTransformer;
-use JakubLech\Transformer\Transformers\IterableToArrayTransformer;
-use JakubLech\Transformer\Transformers\IteratorAggregateToArrayTransformer;
-use JakubLech\Transformer\Transformers\JsonSerializableToArray;
-use JakubLech\Transformer\Transformers\ObjectToArrayTransformer;
-use JakubLech\Transformer\Transformers\ObjectToJsonTransformer;
-use JakubLech\Transformer\Transformers\StdClassToArray;
-use JakubLech\Transformer\Transformers\StringableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ThrowableToArrayTransformer;
-use JakubLech\Transformer\Transformers\ThrowableToJsonTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
 /**

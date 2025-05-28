@@ -9,12 +9,12 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
-use Throwable;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
 final class ObjectToJsonTransformer implements TransformerInterface
 {

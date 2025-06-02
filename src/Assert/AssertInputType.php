@@ -18,13 +18,14 @@ class AssertInputType
     /** @throws UnsupportedInputTypeException */
     public static  function strict(mixed $input, TransformerInterface $transformer): void
     {
-        if (is_a($input, $transformer::inputType(), true)) {
-            return;
-        }
-        $inputType = gettype($input);
-        if ($inputType === $transformer::inputType()) {
-            return;
-        }
-        throw new UnsupportedInputTypeException(sprintf('Expected %s, got %s in %s', $transformer::inputType(), $inputType, $transformer::class));
+        $expectedType = $transformer::inputType();
+
+        if ($input instanceof $expectedType) return;
+        if (gettype($input) === $expectedType) return;
+        if ($expectedType === 'object' && is_object($input)) return;
+
+        throw new UnsupportedInputTypeException(sprintf(
+            'Expected %s, got %s in %s', $expectedType, is_object($input) ? $input::class : gettype($input), $transformer::class
+        ));
     }
 }

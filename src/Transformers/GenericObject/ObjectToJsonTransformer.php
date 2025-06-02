@@ -29,16 +29,6 @@ final class ObjectToJsonTransformer implements TransformerInterface
     {
         AssertInputType::strict($input, $this);
 
-        /**
-         * Possible strategies:
-         * useReflection //default
-         * usePublicProperties
-         * useGetterBased
-         * useJsonEncodeDecode
-         * useSerializationBased
-         */
-        $context['_strategyObjectToArray'] = $context['_strategyObjectToArray'] ?? 'useReflection';
-
         return ($this->transform)(
             ($this->transform)($input, 'array', $context),
             'json',

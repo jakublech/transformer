@@ -35,7 +35,7 @@ interface TransformerInterface
     public static function returnType(): string;
 
     /**
-     * Priority which transformer has, the highest priority is provided.
+     * Transformer with higher priority overrides lower priorities.
      */
     public static function priority(): int;
 }

@@ -40,10 +40,10 @@ final class Transform
 
     public function add(TransformerInterface $transformer): void
     {
-        $transformerKeyPair = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
-        if (!isset($this->transformers[$transformerKeyPair])
-            || ($this->transformers[$transformerKeyPair]->priority() < $transformer->priority())) {
-            $this->transformers[$transformerKeyPair] = $transformer;
+        $key = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
+        if (!isset($this->transformers[$key]) ||
+            $this->transformers[$key]->priority() < $transformer->priority()) {
+            $this->transformers[$key] = $transformer;
         }
     }
 
@@ -53,7 +53,7 @@ final class Transform
     public function get(mixed $input, string $outputType): TransformerInterface
     {
         foreach ($this->getInheritedTypes($input) as $inputType) {
-            if ($transformer = $this->transformers[$this->getTransformerKeyPair($inputType, $outputType)] ?? null) {
+            if ($transformer = $this->transformers[$this->getTransformerKeyPair($inputType, $outputType)] ?? false) {
                 return $transformer;
             }
         }
@@ -82,8 +82,8 @@ final class Transform
     {
         return 'object' !== ($inputType = gettype($input))
             ? [$inputType]
-            : $this->classInheritanceCache[$className = get_class($input)] ??= [
-                $className,
+            : $this->classInheritanceCache[$input::class] ??= [
+                $input::class,
                 ...class_parents($input) ?: [],
                 ...array_reverse(class_implements($input) ?: []),
                 'object',
@@ -92,6 +92,6 @@ final class Transform
 
     private function getTransformerKeyPair(string $inputType, string $outputType): string
     {
-        return sprintf('%s:TransformsTo:%s', $inputType, $outputType);
+        return $inputType.':to:'.$outputType;
     }
 }

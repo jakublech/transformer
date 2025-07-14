@@ -41,8 +41,8 @@ final class Transform
     public function add(TransformerInterface $transformer): void
     {
         $key = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
-        if (!isset($this->transformers[$key]) ||
-            $this->transformers[$key]->priority() < $transformer->priority()) {
+        if (!isset($this->transformers[$key])
+            || $this->transformers[$key]->priority() < $transformer->priority()) {
             $this->transformers[$key] = $transformer;
         }
     }

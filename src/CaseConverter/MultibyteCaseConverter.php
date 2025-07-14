@@ -10,10 +10,7 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\CaseConverter;
 
-/**
- * Multibyte Case Converter
- */
-final class MBCaseConverter
+final class MultibyteCaseConverter
 {
     /**
      * Convert string between different case formats

@@ -25,7 +25,8 @@ final class IteratorAggregateToArrayTransformer implements TransformerInterface
 
     /**
      * @param IteratorAggregate $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -34,7 +35,7 @@ final class IteratorAggregateToArrayTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \IteratorAggregate::class;
+        return IteratorAggregate::class;
     }
 
     public static function returnType(): string

@@ -16,16 +16,17 @@ use JakubLech\Transformer\CaseConverter\ArrayKeysCaseConvert;
 use JakubLech\Transformer\CaseConverter\CaseFormat;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 
 /** Transforms nested arrays */
 final class ArrayKeysCaseTransformer implements TransformerInterface
 {
     /**
-     * Transforms nested arrays
+     * Transforms nested arrays.
+     *
      * @param array $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

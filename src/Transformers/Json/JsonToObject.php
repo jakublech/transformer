@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -10,20 +11,21 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Transformers\Json;
 
-
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 
-class JsonToObject implements TransformerInterface
+final class JsonToObject implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
+
     /**
      * @param string $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array

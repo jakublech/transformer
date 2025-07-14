@@ -15,7 +15,10 @@ use JakubLech\Transformer\CaseConverter\ArrayKeysCaseNormalize;
 use JakubLech\Transformer\CaseConverter\CaseFormat;
 use PHPUnit\Framework\TestCase;
 
-class ArrayKeysCaseNormalizeTest extends TestCase
+/**
+ * @coversNothing
+ */
+final class ArrayKeysCaseNormalizeTest extends TestCase
 {
     public function testNormalizeToKebab(): void
     {
@@ -23,21 +26,21 @@ class ArrayKeysCaseNormalizeTest extends TestCase
             'UserName' => 'John',
             'account-details' => [
                 'IS_ACTIVE' => true,
-                'lastLogin' => '2023-05-20'
-            ]
+                'lastLogin' => '2023-05-20',
+            ],
         ];
 
         $normalized = ArrayKeysCaseNormalize::normalize(
             $mixedData,
-            CaseFormat::KEBAB
+            CaseFormat::KEBAB,
         );
 
         $expected = [
             'user-name' => 'John',
             'account-details' => [
                 'is-active' => true,
-                'last-login' => '2023-05-20'
-            ]
+                'last-login' => '2023-05-20',
+            ],
         ];
 
         $this->assertEquals($expected, $normalized);
@@ -49,21 +52,21 @@ class ArrayKeysCaseNormalizeTest extends TestCase
             'UserName' => 'John',
             'account-details' => [
                 'IS_ACTIVE' => true,
-                'lastLogin' => '2023-05-20'
-            ]
+                'lastLogin' => '2023-05-20',
+            ],
         ];
 
         $normalized = ArrayKeysCaseNormalize::normalize(
             $mixedData,
-            CaseFormat::SNAKE
+            CaseFormat::SNAKE,
         );
 
         $expected = [
             'user_name' => 'John',
             'account_details' => [
                 'is_active' => true,
-                'last_login' => '2023-05-20'
-            ]
+                'last_login' => '2023-05-20',
+            ],
         ];
 
         $this->assertEquals($expected, $normalized);
@@ -75,21 +78,21 @@ class ArrayKeysCaseNormalizeTest extends TestCase
             'UserName' => 'John',
             'account-details' => [
                 'IS_ACTIVE' => true,
-                'lastLogin' => '2023-05-20'
-            ]
+                'lastLogin' => '2023-05-20',
+            ],
         ];
 
         $normalized = ArrayKeysCaseNormalize::normalize(
             $mixedData,
-            CaseFormat::CAMEL
+            CaseFormat::CAMEL,
         );
 
         $expected = [
             'userName' => 'John',
             'accountDetails' => [
                 'isActive' => true,
-                'lastLogin' => '2023-05-20'
-            ]
+                'lastLogin' => '2023-05-20',
+            ],
         ];
 
         $this->assertEquals($expected, $normalized);

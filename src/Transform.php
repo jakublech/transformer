@@ -16,7 +16,7 @@ use JakubLech\Transformer\Transformers\TransformerInterface;
 
 final class Transform
 {
-    /** @var TransformerInterface[] | array<string, TransformerInterface> */
+    /** @var array<string, TransformerInterface>|TransformerInterface[] */
     private array $transformers = [];
 
     /** @var array<string, array<int, string>> */
@@ -92,6 +92,6 @@ final class Transform
 
     private function getTransformerKeyPair(string $inputType, string $outputType): string
     {
-        return $inputType.':to:'.$outputType;
+        return $inputType . ':to:' . $outputType;
     }
 }

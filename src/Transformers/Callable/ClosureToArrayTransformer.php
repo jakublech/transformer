@@ -15,12 +15,14 @@ use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\TransformerInterface;
+use Closure;
 
 final class ClosureToArrayTransformer implements TransformerInterface
 {
     /**
-     * @param \Closure $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param Closure $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

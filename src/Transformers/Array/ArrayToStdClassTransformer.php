@@ -21,7 +21,8 @@ final class ArrayToStdClassTransformer implements TransformerInterface
 {
     /**
      * @param array $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): stdClass
     {
@@ -29,7 +30,7 @@ final class ArrayToStdClassTransformer implements TransformerInterface
 
         $stdClass = new stdClass();
         foreach ($input as $key => $value) {
-            $stdClass->$key = (is_array($value))
+            $stdClass->{$key} = (is_array($value))
                 ? ($this)($input, $context)
                 : $value;
         }

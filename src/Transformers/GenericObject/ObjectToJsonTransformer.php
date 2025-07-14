@@ -21,8 +21,10 @@ final class ObjectToJsonTransformer implements TransformerInterface
     public function __construct(private Transform $transform)
     {
     }
+
     /**
      * @param object $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): string

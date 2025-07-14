@@ -15,14 +15,17 @@ use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 use Throwable;
+use DateTimeImmutable;
 
 final class ThrowableToArrayTransformer implements TransformerInterface
 {
     public function __construct(private bool $debug = false)
     {
     }
+
     /**
      * @param Throwable $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
@@ -38,7 +41,7 @@ final class ThrowableToArrayTransformer implements TransformerInterface
 
         return [
             'message' => $input->getMessage(),
-            'timestamp' => new \DateTimeImmutable(),
+            'timestamp' => new DateTimeImmutable(),
             'class' => $input::class,
             'status' => $input->getCode(),
             'file' => $input->getFile(),

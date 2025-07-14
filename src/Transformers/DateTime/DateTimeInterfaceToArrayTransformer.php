@@ -15,14 +15,16 @@ use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\TransformerInterface;
+use DateTimeInterface;
 
 final class DateTimeInterfaceToArrayTransformer implements TransformerInterface
 {
     private const DEFAULT_FORMAT = 'Y-m-d H:i:s.u';
 
     /**
-     * @param \DateTimeInterface $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param DateTimeInterface $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -37,7 +39,7 @@ final class DateTimeInterfaceToArrayTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \DateTimeInterface::class;
+        return DateTimeInterface::class;
     }
 
     public static function returnType(): string

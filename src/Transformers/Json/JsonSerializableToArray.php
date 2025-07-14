@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -13,15 +14,17 @@ namespace JakubLech\Transformer\Transformers\Json;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
+use JsonSerializable;
 
-class JsonSerializableToArray implements TransformerInterface
+final class JsonSerializableToArray implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param \JsonSerializable $input
+     * @param JsonSerializable $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
@@ -31,7 +34,7 @@ class JsonSerializableToArray implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \JsonSerializable::class;
+        return JsonSerializable::class;
     }
 
     public static function returnType(): string

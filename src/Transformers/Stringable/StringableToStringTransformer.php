@@ -20,6 +20,7 @@ final class StringableToStringTransformer implements TransformerInterface
 {
     /**
      * @param Stringable $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): string

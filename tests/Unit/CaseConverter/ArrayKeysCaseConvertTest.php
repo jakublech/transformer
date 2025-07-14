@@ -15,7 +15,10 @@ use JakubLech\Transformer\CaseConverter\ArrayKeysCaseConvert;
 use JakubLech\Transformer\CaseConverter\CaseFormat;
 use PHPUnit\Framework\TestCase;
 
-class ArrayKeysCaseConvertTest extends TestCase
+/**
+ * @coversNothing
+ */
+final class ArrayKeysCaseConvertTest extends TestCase
 {
     public function testConvert(): void
     {
@@ -23,22 +26,22 @@ class ArrayKeysCaseConvertTest extends TestCase
             'user_name' => 'John',
             'account_details' => [
                 'is_active' => true,
-                'last_login' => '2023-05-20'
-            ]
+                'last_login' => '2023-05-20',
+            ],
         ];
 
         $converted = ArrayKeysCaseConvert::convert(
             $data,
             CaseFormat::CAMEL,
-            CaseFormat::SNAKE
+            CaseFormat::SNAKE,
         );
 
         $expected = [
             'userName' => 'John',
             'accountDetails' => [
                 'isActive' => true,
-                'lastLogin' => '2023-05-20'
-            ]
+                'lastLogin' => '2023-05-20',
+            ],
         ];
 
         $this->assertEquals($expected, $converted);

@@ -15,7 +15,10 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
 use PHPUnit\Framework\TestCase;
 
-class ArrayToJsonTransformerTest extends TestCase
+/**
+ * @coversNothing
+ */
+final class ArrayToJsonTransformerTest extends TestCase
 {
     /** @var ArrayToJsonTransformer */
     private $sut;
@@ -47,7 +50,6 @@ class ArrayToJsonTransformerTest extends TestCase
         $this->assertIsString($result);
         $this->assertEquals($expected, $result);
     }
-
 
     public function testInvokeWithNoArrayWillThrowException(): void
     {

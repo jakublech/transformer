@@ -24,7 +24,8 @@ final class IterableToArrayTransformer implements TransformerInterface
 
     /**
      * @param iterable $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

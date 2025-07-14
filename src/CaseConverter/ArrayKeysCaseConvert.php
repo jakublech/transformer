@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -10,16 +11,15 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\CaseConverter;
 
-
-class ArrayKeysCaseConvert
+final class ArrayKeysCaseConvert
 {
     /**
-     * Recursively convert array keys to a specified case format
+     * Recursively convert array keys to a specified case format.
      */
     public static function convert(
         array $array,
         CaseFormat $targetFormat,
-        ?CaseFormat $sourceFormat = null
+        ?CaseFormat $sourceFormat = null,
     ): array {
         $result = [];
 

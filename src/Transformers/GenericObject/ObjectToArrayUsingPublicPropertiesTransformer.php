@@ -16,19 +16,32 @@ use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
-use ReflectionClass;
 
 final class ObjectToArrayUsingPublicPropertiesTransformer implements TransformerInterface
 {
-    public static function inputType(): string {return 'object';}
-    public static function returnType(): string {return 'array';}
-    public static function priority(): int {return -1000;}
+    public function __construct(private Transform $transform)
+    {
+    }
 
-    public function __construct(private Transform $transform){}
+    public static function inputType(): string
+    {
+        return 'object';
+    }
+
+    public static function returnType(): string
+    {
+        return 'array';
+    }
+
+    public static function priority(): int
+    {
+        return -1000;
+    }
 
     /**
-     * @param  object $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param object $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -36,7 +49,7 @@ final class ObjectToArrayUsingPublicPropertiesTransformer implements Transformer
 
         $array = (array)$input;
 
-        array_walk_recursive($array, function (&$value) use ($context)  {
+        array_walk_recursive($array, function (&$value) use ($context): void {
             if (is_object($value) || is_array($value)) {
                 $value = ($this->transform)($value, 'array', $context);
             }

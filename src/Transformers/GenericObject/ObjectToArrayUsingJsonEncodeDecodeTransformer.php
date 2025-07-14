@@ -14,19 +14,29 @@ namespace JakubLech\Transformer\Transformers\GenericObject;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
-use ReflectionClass;
 
 final class ObjectToArrayUsingJsonEncodeDecodeTransformer implements TransformerInterface
 {
-    public static function inputType(): string {return 'object';}
-    public static function returnType(): string {return 'array';}
-    public static function priority(): int {return -1000;}
+    public static function inputType(): string
+    {
+        return 'object';
+    }
+
+    public static function returnType(): string
+    {
+        return 'array';
+    }
+
+    public static function priority(): int
+    {
+        return -1000;
+    }
 
     /**
-     * @param  object $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param object $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

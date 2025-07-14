@@ -16,19 +16,32 @@ use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
-use ReflectionClass;
 
 final class ObjectToArrayUsingGettersTransformer implements TransformerInterface
 {
-    public static function inputType(): string {return 'object';}
-    public static function returnType(): string {return 'array';}
-    public static function priority(): int {return -1000;}
+    public function __construct(private Transform $transform)
+    {
+    }
 
-    public function __construct(private Transform $transform){}
+    public static function inputType(): string
+    {
+        return 'object';
+    }
+
+    public static function returnType(): string
+    {
+        return 'array';
+    }
+
+    public static function priority(): int
+    {
+        return -1000;
+    }
 
     /**
-     * @param  object $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param object $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -38,11 +51,12 @@ final class ObjectToArrayUsingGettersTransformer implements TransformerInterface
         foreach (get_class_methods($input) as $method) {
             if (str_starts_with($method, 'get')) {
                 $key = lcfirst(substr($method, 3));
-                $array[$key] = is_object($input->$method()) || is_array($input->$method())
+                $array[$key] = is_object($input->{$method}()) || is_array($input->{$method}())
                     ? ($this->transform)($input, 'array', $context)
-                    : $input->$method();
+                    : $input->{$method}();
             }
         }
+
         return $array;
     }
 }

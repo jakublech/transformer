@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -10,19 +11,20 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Transformers\GenericObject;
 
-
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
+use stdClass;
 
-class StdClassToArray implements TransformerInterface
+final class StdClassToArray implements TransformerInterface
 {
     public function __construct(private Transform $transform)
     {
     }
 
     /**
-     * @param \stdClass $input
+     * @param stdClass $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
@@ -32,7 +34,7 @@ class StdClassToArray implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \stdClass::class;
+        return stdClass::class;
     }
 
     public static function returnType(): string

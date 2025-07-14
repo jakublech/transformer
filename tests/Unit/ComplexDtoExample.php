@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -9,6 +10,15 @@
 declare(strict_types=1);
 
 namespace JakubLech\Transformer\Tests\Unit;
+
+use ArrayIterator;
+use Closure;
+use DateTimeImmutable;
+use DateTimeInterface;
+use Exception;
+use JsonSerializable;
+use Stringable;
+use stdClass;
 
 final class ComplexDtoExample
 {
@@ -21,8 +31,8 @@ final class ComplexDtoExample
 
     // Compound types
     public array $tags;
-    public \DateTimeInterface $createdAt;
-    public \DateTimeImmutable $updatedAt;
+    public DateTimeInterface $createdAt;
+    public DateTimeImmutable $updatedAt;
 
     // Nested DTOs
     public ?self $parent;
@@ -32,19 +42,20 @@ final class ComplexDtoExample
     // Collections
     /** @var ProductDto[] */
     public array $products = [];
+
     /** @var array<int, CategoryDto> */
     public array $categories;
 
     // Special cases
     public $untypedProperty;
-    private string $privateProperty;
-    protected array $protectedArray = [];
-    public \stdClass $metadata;
-    public \Stringable $stringableObject;
-    public \JsonSerializable $jsonSerializableObject;
+    public stdClass $metadata;
+    public Stringable $stringableObject;
+    public JsonSerializable $jsonSerializableObject;
     public iterable $iterableProperty;
-    public \Closure $closureProperty;
-    public \Exception $exception;
+    public Closure $closureProperty;
+    public Exception $exception;
+    private string $privateProperty;
+    private array $protectedArray = [];
 
     public function __construct(
         int $id,
@@ -53,8 +64,8 @@ final class ComplexDtoExample
         bool $isActive,
         ?string $nullableString,
         array $tags,
-        \DateTimeInterface $createdAt,
-        \DateTimeImmutable $updatedAt,
+        DateTimeInterface $createdAt,
+        DateTimeImmutable $updatedAt,
         ?self $parent,
         ?self $child,
         ?AddressDto $address,
@@ -63,12 +74,12 @@ final class ComplexDtoExample
         $untypedProperty,
         string $privateProperty,
         array $protectedArray,
-        \stdClass $metadata,
-        \Stringable $stringableObject,
-        \JsonSerializable $jsonSerializableObject,
+        stdClass $metadata,
+        Stringable $stringableObject,
+        JsonSerializable $jsonSerializableObject,
         iterable $iterableProperty,
-        \Closure $closureProperty,
-        \Exception $exception,
+        Closure $closureProperty,
+        Exception $exception,
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -103,33 +114,39 @@ final class ComplexDtoExample
             true,
             null,
             ['php', 'test', 'transformer'],
-            new \DateTime('2025-05-27 18:30:37'),
-            new \DateTimeImmutable('2025-05-28 19:31:35'),
+            new \DateTimeImmutable('2025-05-27 18:30:37'),
+            new DateTimeImmutable('2025-05-28 19:31:35'),
             null,
             null,
             new AddressDto(),
             [
                 new ProductDto('PROD-123', 29.99, ['color' => 'red']),
-                new ProductDto('PROD-456', 39.99, ['size' => 'L'])
+                new ProductDto('PROD-456', 39.99, ['size' => 'L']),
             ],
             [1 => new CategoryDto(
                 0,
                 'Root',
-                new CategoryDto(1, 'Child', null)
+                new CategoryDto(1, 'Child', null),
             )],
             'untyped value',
             'private value',
             ['protected' => 'data'],
             (object)['key' => 'value'],
-            new class implements \Stringable {
-                public function __toString(): string { return 'stringable'; }
+            new class implements Stringable {
+                public function __toString(): string
+                {
+                    return 'stringable';
+                }
             },
-            new class implements \JsonSerializable {
-                public function jsonSerialize(): array { return ['json' => 'data']; }
+            new class implements JsonSerializable {
+                public function jsonSerialize(): array
+                {
+                    return ['json' => 'data'];
+                }
             },
-            new \ArrayIterator([1, 2, 3]),
+            new ArrayIterator([1, 2, 3]),
             fn() => 'closure result',
-            new \Exception('some exception', 404),
+            new Exception('some exception', 404),
         );
     }
 
@@ -145,17 +162,20 @@ final class ComplexDtoExample
 }
 
 // Supporting DTOs
-final class AddressDto {
+final class AddressDto
+{
     public string $street = 'Main St';
     public string $city = 'New York';
     private string $zip = '10001';
 
-    public function getZip(): string {
+    public function getZip(): string
+    {
         return $this->zip;
     }
 }
 
-final class ProductDto {
+final class ProductDto
+{
     public string $sku = 'PROD-123';
     public float $price = 29.99;
     public array $attributes = ['color' => 'red'];
@@ -168,15 +188,16 @@ final class ProductDto {
     }
 }
 
-final class CategoryDto {
+final class CategoryDto
+{
     public int $id = 1;
     public string $name = 'Test Category';
     public ?self $parent = null;
 
-    public function __construct(int $id, string $name, ?CategoryDto $parent) {
+    public function __construct(int $id, string $name, ?CategoryDto $parent)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->parent = $parent;
     }
 }
-

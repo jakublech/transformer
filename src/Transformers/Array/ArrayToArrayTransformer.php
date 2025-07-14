@@ -25,9 +25,11 @@ final class ArrayToArrayTransformer implements TransformerInterface
     }
 
     /**
-     * Transforms nested arrays
+     * Transforms nested arrays.
+     *
      * @param array $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

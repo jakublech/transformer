@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -13,7 +14,7 @@ namespace JakubLech\Transformer\CaseConverter;
 final class MultibyteCaseConverter
 {
     /**
-     * Convert string between different case formats
+     * Convert string between different case formats.
      */
     public static function convert(string $input, CaseFormat $fromFormat, CaseFormat $toFormat): string
     {
@@ -23,7 +24,7 @@ final class MultibyteCaseConverter
     }
 
     /**
-     * Auto-detect an input format and convert to the target format
+     * Auto-detect an input format and convert to the target format.
      */
     public static function autoConvert(string $input, CaseFormat $toFormat): string
     {
@@ -48,11 +49,11 @@ final class MultibyteCaseConverter
         return match ($format) {
             CaseFormat::CAMEL => lcfirst(implode('', array_map(
                 fn($w) => mb_convert_case($w, MB_CASE_TITLE, 'UTF-8'),
-                $lowerWords
+                $lowerWords,
             ))),
             CaseFormat::PASCAL => implode('', array_map(
                 fn($w) => mb_convert_case($w, MB_CASE_TITLE, 'UTF-8'),
-                $lowerWords
+                $lowerWords,
             )),
             CaseFormat::SNAKE => implode('_', $lowerWords),
             CaseFormat::KEBAB => implode('-', $lowerWords),

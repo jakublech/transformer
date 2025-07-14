@@ -20,7 +20,8 @@ final class CallableToArrayTransformer implements TransformerInterface
 {
     /**
      * @param callable $input
-     * @throws TransformException | UnsupportedInputTypeException
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {

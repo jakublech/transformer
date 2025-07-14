@@ -15,6 +15,7 @@ use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transform;
 use JakubLech\Transformer\Transformers\TransformerInterface;
+use ArrayIterator;
 
 final class ArrayIteratorToArrayTransformer implements TransformerInterface
 {
@@ -23,8 +24,9 @@ final class ArrayIteratorToArrayTransformer implements TransformerInterface
     }
 
     /**
-     * @param \ArrayIterator $input
-     * @throws TransformException | UnsupportedInputTypeException
+     * @param ArrayIterator $input
+     *
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -33,7 +35,7 @@ final class ArrayIteratorToArrayTransformer implements TransformerInterface
 
     public static function inputType(): string
     {
-        return \ArrayIterator::class;
+        return ArrayIterator::class;
     }
 
     public static function returnType(): string

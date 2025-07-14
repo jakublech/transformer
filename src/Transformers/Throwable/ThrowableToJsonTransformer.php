@@ -21,6 +21,7 @@ final class ThrowableToJsonTransformer implements TransformerInterface
 {
     /**
      * @param Throwable $input
+     *
      * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): string

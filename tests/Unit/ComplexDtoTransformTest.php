@@ -83,30 +83,30 @@ final class ComplexDtoTransformTest extends TestCase
             'tags' => ['php', 'test', 'transformer'],
             'createdAt' => [
                 'date' => '2025-05-27 18:30:37.000000',
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'updatedAt' => [
                 'date' => '2025-05-28 19:31:35.000000',
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'parent' => null,
             'child' => null,
             'address' => [
                 'street' => 'Main St',
                 'city' => 'New York',
-                'zip' => '10001' // Private property accessed via getter
+                'zip' => '10001', // Private property accessed via getter
             ],
             'products' => [
                 [
                     'sku' => 'PROD-123',
                     'price' => 29.99,
-                    'attributes' => ['color' => 'red']
+                    'attributes' => ['color' => 'red'],
                 ],
                 [
                     'sku' => 'PROD-456',
                     'price' => 39.99,
-                    'attributes' => ['size' => 'L']
-                ]
+                    'attributes' => ['size' => 'L'],
+                ],
             ],
             'categories' => [
                 1 => [
@@ -115,19 +115,19 @@ final class ComplexDtoTransformTest extends TestCase
                     'parent' => [
                         'id' => 1,
                         'name' => 'Child',
-                        'parent' => null
-                    ]
-                ]
+                        'parent' => null,
+                    ],
+                ],
             ],
             'untypedProperty' => 'untyped value',
             'privateProperty' => 'private value', // Accessed via reflection or getter
             'protectedArray' => ['protected' => 'data'],
             'metadata' => [
-                'key' => 'value'
+                'key' => 'value',
             ],
             'stringableObject' => 'stringable',
             'jsonSerializableObject' => [
-                'json' => 'data'
+                'json' => 'data',
             ],
             'iterableProperty' => [1, 2, 3],
             'closureProperty' => ['Closure'], // Typically excluded or shown as '[Closure]'
@@ -153,30 +153,30 @@ final class ComplexDtoTransformTest extends TestCase
             'tags' => ['php', 'test', 'transformer'],
             'createdAt' => [
                 'date' => '2025-05-27 18:30:37.000000',
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'updatedAt' => [
                 'date' => '2025-05-28 19:31:35.000000',
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'parent' => null,
             'child' => null,
             'address' => [
                 'street' => 'Main St',
                 'city' => 'New York',
-                "\0JakubLech\Transformer\Tests\Unit\AddressDto\0zip" => '10001' // Private property accessed via getter
+                "\0JakubLech\\Transformer\\Tests\\Unit\\AddressDto\0zip" => '10001', // Private property accessed via getter
             ],
             'products' => [
                 [
                     'sku' => 'PROD-123',
                     'price' => 29.99,
-                    'attributes' => ['color' => 'red']
+                    'attributes' => ['color' => 'red'],
                 ],
                 [
                     'sku' => 'PROD-456',
                     'price' => 39.99,
-                    'attributes' => ['size' => 'L']
-                ]
+                    'attributes' => ['size' => 'L'],
+                ],
             ],
             'categories' => [
                 1 => [
@@ -185,23 +185,23 @@ final class ComplexDtoTransformTest extends TestCase
                     'parent' => [
                         'id' => 1,
                         'name' => 'Child',
-                        'parent' => null
-                    ]
-                ]
+                        'parent' => null,
+                    ],
+                ],
             ],
             'untypedProperty' => 'untyped value', // Accessed via reflection or getter
             "\0*\0protectedArray" => ['protected' => 'data'],
             'metadata' => [
-                'key' => 'value'
+                'key' => 'value',
             ],
             'stringableObject' => 'stringable',
             'jsonSerializableObject' => [
-                'json' => 'data'
+                'json' => 'data',
             ],
             'iterableProperty' => [1, 2, 3],
             'closureProperty' => ['Closure'], // Typically excluded or shown as '[Closure]'
             'exception' => ['error' => 'some exception', 'code' => 404],
-            "\0JakubLech\Transformer\Tests\Unit\ComplexDtoExample\0privateProperty" => 'private value',
+            "\0JakubLech\\Transformer\\Tests\\Unit\\ComplexDtoExample\0privateProperty" => 'private value',
         ];
 
         $this->assertEquals($expected, $result);
@@ -236,12 +236,12 @@ final class ComplexDtoTransformTest extends TestCase
             'createdAt' => [
                 'date' => '2025-05-27 18:30:37.000000',
                 'timezone_type' => 3,
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'updatedAt' => [
                 'date' => '2025-05-28 19:31:35.000000',
                 'timezone_type' => 3,
-                'timezone' => 'UTC'
+                'timezone' => 'UTC',
             ],
             'parent' => null,
             'child' => null,
@@ -253,13 +253,13 @@ final class ComplexDtoTransformTest extends TestCase
                 [
                     'sku' => 'PROD-123',
                     'price' => 29.99,
-                    'attributes' => ['color' => 'red']
+                    'attributes' => ['color' => 'red'],
                 ],
                 [
                     'sku' => 'PROD-456',
                     'price' => 39.99,
-                    'attributes' => ['size' => 'L']
-                ]
+                    'attributes' => ['size' => 'L'],
+                ],
             ],
             'categories' => [
                 1 => [
@@ -268,17 +268,17 @@ final class ComplexDtoTransformTest extends TestCase
                     'parent' => [
                         'id' => 1,
                         'name' => 'Child',
-                        'parent' => null
-                    ]
-                ]
+                        'parent' => null,
+                    ],
+                ],
             ],
             'untypedProperty' => 'untyped value', // Accessed via reflection or getter
             'metadata' => [
-                'key' => 'value'
+                'key' => 'value',
             ],
             'stringableObject' => [],
             'jsonSerializableObject' => [
-                'json' => 'data'
+                'json' => 'data',
             ],
             'iterableProperty' => [1, 2, 3],
             'closureProperty' => [], // Typically excluded or shown as '[Closure]'

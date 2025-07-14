@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -13,19 +14,28 @@ namespace JakubLech\Transformer\Assert;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 
-class AssertInputType
+final class AssertInputType
 {
     /** @throws UnsupportedInputTypeException */
-    public static  function strict(mixed $input, TransformerInterface $transformer): void
+    public static function strict(mixed $input, TransformerInterface $transformer): void
     {
         $expectedType = $transformer::inputType();
 
-        if ($input instanceof $expectedType) return;
-        if (gettype($input) === $expectedType) return;
-        if ($expectedType === 'object' && is_object($input)) return;
+        if ($input instanceof $expectedType) {
+            return;
+        }
+        if (gettype($input) === $expectedType) {
+            return;
+        }
+        if ('object' === $expectedType && is_object($input)) {
+            return;
+        }
 
         throw new UnsupportedInputTypeException(sprintf(
-            'Expected %s, got %s in %s', $expectedType, is_object($input) ? $input::class : gettype($input), $transformer::class
+            'Expected %s, got %s in %s',
+            $expectedType,
+            is_object($input) ? $input::class : gettype($input),
+            $transformer::class,
         ));
     }
 }

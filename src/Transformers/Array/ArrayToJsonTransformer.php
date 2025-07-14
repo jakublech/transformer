@@ -19,7 +19,7 @@ use JakubLech\Transformer\Transformers\TransformerInterface;
 final class ArrayToJsonTransformer implements TransformerInterface
 {
     /**
-     * @throws TransformException | UnsupportedInputTypeException
+     * @throws TransformException|UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): string
     {

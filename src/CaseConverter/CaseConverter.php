@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -10,10 +11,10 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\CaseConverter;
 
-class CaseConverter
+final class CaseConverter
 {
     /**
-     * Convert string between different case formats
+     * Convert string between different case formats.
      */
     public static function convert(string $input, CaseFormat $fromFormat, CaseFormat $toFormat): string
     {
@@ -23,7 +24,7 @@ class CaseConverter
     }
 
     /**
-     * Auto-detect an input format and convert to the target format
+     * Auto-detect an input format and convert to the target format.
      */
     public static function autoConvert(string $input, CaseFormat $toFormat): string
     {
@@ -35,7 +36,7 @@ class CaseConverter
         return match ($format) {
             CaseFormat::UPPER_SNAKE, CaseFormat::SNAKE => explode('_', strtolower($input)),
             CaseFormat::CAMEL => preg_split('/(?=[A-Z])/', lcfirst($input)),
-            CaseFormat::KEBAB=> explode('-', strtolower($input)),
+            CaseFormat::KEBAB => explode('-', strtolower($input)),
             CaseFormat::PASCAL => preg_split('/(?=[A-Z])/', $input),
         };
     }

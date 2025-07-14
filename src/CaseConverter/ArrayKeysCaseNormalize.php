@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author Jakub Lech <info@smartbyte.pl>
  *
@@ -10,15 +11,14 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\CaseConverter;
 
-
-class ArrayKeysCaseNormalize
+final class ArrayKeysCaseNormalize
 {
     /**
-     * Detect and recursively normalize array keys to a consistent format
+     * Detect and recursively normalize array keys to a consistent format.
      */
     public static function normalize(
         array $array,
-        CaseFormat $targetFormat
+        CaseFormat $targetFormat,
     ): array {
         $result = [];
 

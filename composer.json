@@ -1,5 +1,5 @@
 {
-  "name": "jakublech/converter",
+  "name": "jakublech/transformer",
   "type": "library",
   "description": "Handles converting php classes to other classes or formats",
   "keywords": [],

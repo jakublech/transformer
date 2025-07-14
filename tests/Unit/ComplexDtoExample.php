@@ -114,7 +114,7 @@ final class ComplexDtoExample
             true,
             null,
             ['php', 'test', 'transformer'],
-            new \DateTimeImmutable('2025-05-27 18:30:37'),
+            new DateTimeImmutable('2025-05-27 18:30:37'),
             new DateTimeImmutable('2025-05-28 19:31:35'),
             null,
             null,

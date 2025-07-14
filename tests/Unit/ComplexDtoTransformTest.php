@@ -131,7 +131,7 @@ final class ComplexDtoTransformTest extends TestCase
             'closureProperty' => ['Closure'], // Typically excluded or shown as '[Closure]'
             'exception' => ['error' => 'some exception', 'code' => 404],
             'privateProperty' => 'private value',
-            'protectedArray' => ['protected' => 'data',],
+            'protectedArray' => ['protected' => 'data'],
         ];
 
         $this->assertSame($expected, $resultReflection);

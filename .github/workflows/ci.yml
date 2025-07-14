@@ -7,21 +7,25 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        php-version: ['8.2', '8.3', '8.4' ]
+
     steps:
-      -   uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      -   name: Set up PHP
-          uses: shivammathur/setup-php@v2
-          with:
-            php-version: '8.2'
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
 
-      -   name: Setup project
-          run: composer install --optimize-autoloader
+      - name: Setup project
+        run: composer install --optimize-autoloader
 
-      -   name: Test static analysis
-          run: composer test:cs-fixer
+      - name: Test static analysis
+        run: composer test:cs-fixer
 
-      -   name: Unit tests
-          run: composer test:unit
+      - name: Unit tests
+        run: composer test:unit
 
 

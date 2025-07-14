@@ -120,8 +120,6 @@ final class ComplexDtoTransformTest extends TestCase
                 ],
             ],
             'untypedProperty' => 'untyped value',
-            'privateProperty' => 'private value', // Accessed via reflection or getter
-            'protectedArray' => ['protected' => 'data'],
             'metadata' => [
                 'key' => 'value',
             ],
@@ -132,6 +130,8 @@ final class ComplexDtoTransformTest extends TestCase
             'iterableProperty' => [1, 2, 3],
             'closureProperty' => ['Closure'], // Typically excluded or shown as '[Closure]'
             'exception' => ['error' => 'some exception', 'code' => 404],
+            'privateProperty' => 'private value',
+            'protectedArray' => ['protected' => 'data',],
         ];
 
         $this->assertSame($expected, $resultReflection);
@@ -190,7 +190,6 @@ final class ComplexDtoTransformTest extends TestCase
                 ],
             ],
             'untypedProperty' => 'untyped value', // Accessed via reflection or getter
-            "\0*\0protectedArray" => ['protected' => 'data'],
             'metadata' => [
                 'key' => 'value',
             ],
@@ -202,6 +201,7 @@ final class ComplexDtoTransformTest extends TestCase
             'closureProperty' => ['Closure'], // Typically excluded or shown as '[Closure]'
             'exception' => ['error' => 'some exception', 'code' => 404],
             "\0JakubLech\\Transformer\\Tests\\Unit\\ComplexDtoExample\0privateProperty" => 'private value',
+            "\0JakubLech\\Transformer\\Tests\\Unit\\ComplexDtoExample\0protectedArray" => ['protected' => 'data'],
         ];
 
         $this->assertEquals($expected, $result);

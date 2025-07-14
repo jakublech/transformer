@@ -1,9 +1,9 @@
 {
   "name": "jakublech/transformer",
   "type": "library",
-  "description": "Handles converting php classes to other classes or formats",
+  "description": "Simply converts classes to other classes or formats",
   "keywords": [],
-  "homepage": "https://smartbyte.pl",
+  "homepage": "https://github.com/jakublech/transformer",
   "license": "LGPL-3.0-or-later",
   "authors": [
     {

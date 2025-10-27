@@ -13,7 +13,8 @@ namespace JakubLech\Transformer\Tests\Unit\Transformer\Throwable;
 
 use Exception;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
+use JakubLech\Transformer\TypesTransformer\Throwable\ThrowableToArrayTypesTransformer;
+use JakubLech\Transformer\TransformerFactory;
 use PHPUnit\Framework\TestCase;
 use Throwable;
 
@@ -22,12 +23,13 @@ use Throwable;
  */
 final class ThrowableToArrayTransformerTest extends TestCase
 {
-    private ThrowableToArrayTransformer $sut;
+    private ThrowableToArrayTypesTransformer $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sut = new ThrowableToArrayTransformer();
+        $transformer = TransformerFactory::defaultPhpNativeTypesTransformer();
+        $this->sut = new ThrowableToArrayTypesTransformer($transformer);
     }
 
     public function testInvokeWithThrowable(): void
@@ -54,16 +56,16 @@ final class ThrowableToArrayTransformerTest extends TestCase
 
     public function testPriority(): void
     {
-        $this->assertEquals(-1000, ThrowableToArrayTransformer::priority());
+        $this->assertEquals(-1000, ThrowableToArrayTypesTransformer::priority());
     }
 
     public function testInputType(): void
     {
-        $this->assertEquals(Throwable::class, ThrowableToArrayTransformer::inputType());
+        $this->assertEquals(Throwable::class, ThrowableToArrayTypesTransformer::inputType());
     }
 
     public function testReturnType(): void
     {
-        $this->assertEquals('array', ThrowableToArrayTransformer::returnType());
+        $this->assertEquals('array', ThrowableToArrayTypesTransformer::returnType());
     }
 }

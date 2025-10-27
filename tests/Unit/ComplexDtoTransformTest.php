@@ -11,23 +11,8 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Tests\Unit;
 
-use JakubLech\Transformer\Transform;
-use JakubLech\Transformer\Transformers\Array\ArrayIteratorToArrayTransformer;
-use JakubLech\Transformer\Transformers\Array\ArrayToArrayTransformer;
-use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
-use JakubLech\Transformer\Transformers\Array\ArrayToStdClassTransformer;
-use JakubLech\Transformer\Transformers\Array\IterableToArrayTransformer;
-use JakubLech\Transformer\Transformers\Array\IteratorAggregateToArrayTransformer;
-use JakubLech\Transformer\Transformers\Callable\CallableToArrayTransformer;
-use JakubLech\Transformer\Transformers\Callable\ClosureToArrayTransformer;
-use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransformer;
-use JakubLech\Transformer\Transformers\GenericObject\ObjectToArrayCompositeTransformer;
-use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
-use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
-use JakubLech\Transformer\Transformers\Json\JsonSerializableToArray;
-use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
+use JakubLech\Transformer\Transformer;
+use JakubLech\Transformer\TransformerFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,36 +20,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class ComplexDtoTransformTest extends TestCase
 {
-    private Transform $sut;
-    private ArrayToJsonTransformer $transformer;
+    private Transformer $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->sut = new Transform();
-        $transformers = [
-            new ArrayToArrayTransformer($this->sut),
-            new ArrayIteratorToArrayTransformer($this->sut),
-            new ArrayToJsonTransformer(),
-            new ArrayToStdClassTransformer(),
-            new CallableToArrayTransformer(),
-            new ClosureToArrayTransformer(),
-            new DateTimeInterfaceToArrayTransformer(),
-            new IterableToArrayTransformer($this->sut),
-            new IteratorAggregateToArrayTransformer($this->sut),
-            new JsonSerializableToArray($this->sut),
-            new ObjectToArrayCompositeTransformer($this->sut),
-            new ObjectToJsonTransformer($this->sut),
-            new StringableToArrayTransformer(),
-            new StdClassToArray($this->sut),
-            new ThrowableToArrayTransformer(),
-            new ThrowableToJsonTransformer(),
-        ];
-
-        foreach ($transformers as $transformer) {
-            $this->sut->add($transformer);
-        }
+        $this->sut = TransformerFactory::defaultPhpNativeTypesTransformer();
     }
 
     public function testComplexDtoExampleToArrayUsingReflection(): void

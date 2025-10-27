@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\Tests\Unit\Transformer\Array;
 
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\TypesTransformer\Array\ArrayToJsonTypesTransformer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,13 +20,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class ArrayToJsonTransformerTest extends TestCase
 {
-    /** @var ArrayToJsonTransformer */
+    /** @var ArrayToJsonTypesTransformer */
     private $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sut = new ArrayToJsonTransformer();
+        $this->sut = new ArrayToJsonTypesTransformer();
     }
 
     public function testInvoke(): void
@@ -61,16 +61,16 @@ final class ArrayToJsonTransformerTest extends TestCase
 
     public function testPriority(): void
     {
-        $this->assertEquals(-1000, ArrayToJsonTransformer::priority());
+        $this->assertEquals(-1000, ArrayToJsonTypesTransformer::priority());
     }
 
     public function testInputType(): void
     {
-        $this->assertEquals('array', ArrayToJsonTransformer::inputType());
+        $this->assertEquals('array', ArrayToJsonTypesTransformer::inputType());
     }
 
     public function testReturnType(): void
     {
-        $this->assertEquals('json', ArrayToJsonTransformer::returnType());
+        $this->assertEquals('json', ArrayToJsonTypesTransformer::returnType());
     }
 }

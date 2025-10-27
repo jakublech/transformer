@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\Tests\Unit;
 
 use JakubLech\Transformer\Exception\UnsupportedTransformationException;
-use JakubLech\Transformer\Transform;
-use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformer;
+use JakubLech\Transformer\TransformerFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,17 +21,12 @@ use PHPUnit\Framework\TestCase;
  */
 final class TransformTest extends TestCase
 {
-    private Transform $sut;
-    private ArrayToJsonTransformer $transformer;
+    private Transformer $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->transformer = new ArrayToJsonTransformer();
-        $this->sut = new Transform([
-            $this->transformer,
-        ]);
+        $this->sut = TransformerFactory::defaultPhpNativeTypesTransformer();
     }
 
     public function testInvokeWithSupportedTransformation(): void
@@ -52,25 +47,5 @@ final class TransformTest extends TestCase
         $outputType = 'json';
 
         ($this->sut)($input, $outputType);
-    }
-
-    public function testFindTransformerReturnsTransformerForSupportedTransformation(): void
-    {
-        $input = ['key' => 'value'];
-        $outputType = 'json';
-
-        $transformer = $this->sut->find($input, $outputType);
-
-        $this->assertSame($this->transformer, $transformer);
-    }
-
-    public function testFindTransformerReturnsNullForUnsupportedTransformation(): void
-    {
-        $input = 'unsupported-input';
-        $outputType = 'json';
-
-        $transformer = $this->sut->find($input, $outputType);
-
-        $this->assertNull($transformer);
     }
 }

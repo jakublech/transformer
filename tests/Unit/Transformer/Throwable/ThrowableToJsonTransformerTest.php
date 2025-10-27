@@ -13,7 +13,8 @@ namespace JakubLech\Transformer\Tests\Unit\Transformer\Throwable;
 
 use Exception;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
+use JakubLech\Transformer\TypesTransformer\Throwable\ThrowableToJsonTypesTransformer;
+use JakubLech\Transformer\TransformerFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,12 +22,13 @@ use PHPUnit\Framework\TestCase;
  */
 final class ThrowableToJsonTransformerTest extends TestCase
 {
-    private ThrowableToJsonTransformer $sut;
+    private ThrowableToJsonTypesTransformer $sut;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sut = new ThrowableToJsonTransformer();
+        $transformer = TransformerFactory::defaultPhpNativeTypesTransformer();
+        $this->sut = new ThrowableToJsonTypesTransformer($transformer);
     }
 
     public function testInvokeWithThrowable(): void
@@ -53,16 +55,16 @@ final class ThrowableToJsonTransformerTest extends TestCase
 
     public function testPriority(): void
     {
-        $this->assertEquals(-1000, ThrowableToJsonTransformer::priority());
+        $this->assertEquals(-1000, ThrowableToJsonTypesTransformer::priority());
     }
 
     public function testInputType(): void
     {
-        $this->assertEquals('Throwable', ThrowableToJsonTransformer::inputType());
+        $this->assertEquals('Throwable', ThrowableToJsonTypesTransformer::inputType());
     }
 
     public function testReturnType(): void
     {
-        $this->assertEquals('json', ThrowableToJsonTransformer::returnType());
+        $this->assertEquals('json', ThrowableToJsonTypesTransformer::returnType());
     }
 }

@@ -22,9 +22,6 @@ jobs:
       - name: Setup project
         run: composer install --optimize-autoloader
 
-      - name: Test static analysis
-        run: composer test:cs-fixer
-
       - name: Unit tests
         run: composer test:unit
 

@@ -9,17 +9,21 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\DateTime;
+namespace JakubLech\Transformer\Transformers\DateTime;
 
+use DateTimeInterface;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
-use DateTimeInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class DateTimeInterfaceToArrayTypesTransformer implements TypesTransformerInterface
+final class DateTimeInterfaceToArrayTransformer implements TransformerInterface
 {
     private const DEFAULT_FORMAT = 'Y-m-d H:i:s.u';
+
+    public static function inputType(): string { return DateTimeInterface::class;}
+
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param DateTimeInterface $input
@@ -35,20 +39,5 @@ final class DateTimeInterfaceToArrayTypesTransformer implements TypesTransformer
             'date' => $input->format($format),
             'timezone' => $input->getTimezone()->getName(),
         ];
-    }
-
-    public static function inputType(): string
-    {
-        return DateTimeInterface::class;
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

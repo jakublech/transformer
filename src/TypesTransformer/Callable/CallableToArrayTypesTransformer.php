@@ -12,36 +12,24 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\TypesTransformer\Callable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
-use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
 
 final class CallableToArrayTypesTransformer implements TypesTransformerInterface
 {
+    public static function inputType(): string { return 'callable';}
+
+    public static function returnType(): string { return 'array';}
+
     /**
      * @param callable $input
      *
-     * @throws TransformException|UnsupportedInputTypeException
+     * @throws UnsupportedInputTypeException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
         AssertInputType::strict($input, $this);
 
         return ['callable'];
-    }
-
-    public static function inputType(): string
-    {
-        return 'callable';
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

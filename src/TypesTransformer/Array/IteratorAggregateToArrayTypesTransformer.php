@@ -9,19 +9,22 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Array;
+namespace JakubLech\Transformer\Transformers\Array;
 
 use IteratorAggregate;
+use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class IteratorAggregateToArrayTypesTransformer implements TypesTransformerInterface
+final class IteratorAggregateToArrayTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return IteratorAggregate::class;}
+
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param IteratorAggregate $input
@@ -30,21 +33,8 @@ final class IteratorAggregateToArrayTypesTransformer implements TypesTransformer
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        return ($this->transform)((array) $input, 'array', $context);
-    }
+        AssertInputType::strict($input, $this);
 
-    public static function inputType(): string
-    {
-        return IteratorAggregate::class;
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
+        return $this->transform->transform((array) $input, 'array', $context);
     }
 }

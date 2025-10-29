@@ -9,20 +9,22 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Array;
+namespace JakubLech\Transformer\Transformers\Array;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
+use JakubLech\Transformer\TransformHandler;
 
 /** Transforms nested arrays */
-final class ArrayToArrayTypesTransformer implements TypesTransformerInterface
+final class ArrayToArrayTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return 'array';}
+
+    public static function returnType(): string { return 'array';}
 
     /**
      * Transforms nested arrays.
@@ -37,23 +39,8 @@ final class ArrayToArrayTypesTransformer implements TypesTransformerInterface
 
         return array_map(function ($value) use ($context) {
             return is_object($value) || is_array($value)
-                ? ($this->transform)($value, static::returnType(), $context)
+                ? $this->transform->transform($value, static::returnType(), $context)
                 : $value;
         }, $input);
-    }
-
-    public static function inputType(): string
-    {
-        return 'array';
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

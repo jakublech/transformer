@@ -18,6 +18,10 @@ use Stringable;
 
 final class StringableToArrayTypesTransformer implements TypesTransformerInterface
 {
+    public static function inputType(): string { return Stringable::class;}
+
+    public static function returnType(): string { return 'array';}
+
     /**
      * @param Stringable $input
      *
@@ -28,20 +32,5 @@ final class StringableToArrayTypesTransformer implements TypesTransformerInterfa
         AssertInputType::strict($input, $this);
 
         return (string) $input;
-    }
-
-    public static function inputType(): string
-    {
-        return Stringable::class;
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

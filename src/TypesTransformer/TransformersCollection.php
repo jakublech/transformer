@@ -9,11 +9,19 @@
 
 declare(strict_types=1);
 
+<<<<<<<< HEAD:src/TypesTransformer/TypesTransformersCollection.php
 namespace JakubLech\Transformer\TypesTransformer;
 
 use JakubLech\Transformer\Exception\UnsupportedTransformationException;
 
 final class TypesTransformersCollection implements TypesTransformersCollectionInterface
+========
+namespace JakubLech\Transformer\Transformers;
+
+use JakubLech\Transformer\Exception\UnsupportedTransformationException;
+
+final class TransformersCollection implements TransformersCollectionInterface
+>>>>>>>> 2241c56 (refactor):src/TypesTransformer/TransformersCollection.php
 {
     /** @var array<string, TypesTransformerInterface>|TypesTransformerInterface[] */
     private array $transformers = [];
@@ -29,13 +37,21 @@ final class TypesTransformersCollection implements TypesTransformersCollectionIn
         }
     }
 
+<<<<<<<< HEAD:src/TypesTransformer/TypesTransformersCollection.php
     public function add(TypesTransformerInterface $transformer): void
+========
+    public function add(TransformerInterface $transformer, bool $overwrite = false): void
+>>>>>>>> 2241c56 (refactor):src/TypesTransformer/TransformersCollection.php
     {
         $key = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
-        if (!isset($this->transformers[$key])
-            || $this->transformers[$key]->priority() < $transformer->priority()) {
-            $this->transformers[$key] = $transformer;
+        if (isset($this->transformers[$key]) && false === $overwrite) {
+            throw new \LogicException(sprintf(
+                'Transformer from %s to %s is already registered. Use overwrite=true to replace it.',
+                $transformer->inputType(),
+                $transformer->returnType(),
+            ));
         }
+        $this->transformers[$key] = $transformer;
     }
 
     /**

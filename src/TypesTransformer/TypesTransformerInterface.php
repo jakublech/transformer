@@ -9,11 +9,11 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer;
+namespace JakubLech\Transformer\Transformers;
 
 use JakubLech\Transformer\Exception\TransformException;
 
-interface TypesTransformerInterface
+interface TransformerInterface
 {
     /**
      * Transforms the input to the target type.
@@ -24,18 +24,7 @@ interface TypesTransformerInterface
      */
     public function __invoke(mixed $input, array $context = []): mixed;
 
-    /**
-     * Input type which transformer receives.
-     */
     public static function inputType(): string;
 
-    /**
-     * Output type which transformer returns.
-     */
     public static function returnType(): string;
-
-    /**
-     * Transformer with higher priority overrides lower priorities (if input type and return type are the same).
-     */
-    public static function priority(): int;
 }

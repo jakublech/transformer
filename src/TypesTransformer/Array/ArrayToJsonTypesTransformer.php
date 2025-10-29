@@ -18,6 +18,10 @@ use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
 
 final class ArrayToJsonTypesTransformer implements TypesTransformerInterface
 {
+    public static function inputType(): string { return 'array';}
+
+    public static function returnType(): string { return 'json';}
+
     /**
      * @throws TransformException|UnsupportedInputTypeException
      */
@@ -34,20 +38,5 @@ final class ArrayToJsonTypesTransformer implements TypesTransformerInterface
         }
 
         return $result;
-    }
-
-    public static function inputType(): string
-    {
-        return 'array';
-    }
-
-    public static function returnType(): string
-    {
-        return 'json';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

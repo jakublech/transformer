@@ -20,6 +20,9 @@ use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
 
 final class ArrayKeysCaseTypesTransformer implements TypesTransformerInterface
 {
+    public static function inputType(): string { return 'array';}
+
+    public static function returnType(): string { return 'arrayKeysCaseFormat';}
     /**
      * Transforms nested arrays.
      *
@@ -35,20 +38,5 @@ final class ArrayKeysCaseTypesTransformer implements TypesTransformerInterface
         $sourceCaseFormat = CaseFormat::tryFrom($context['sourceArrayKeysCaseFormat'] ?? '');
 
         return ArrayKeysCaseConvert::convert($input, $targetCaseFormat, $sourceCaseFormat);
-    }
-
-    public static function inputType(): string
-    {
-        return 'array';
-    }
-
-    public static function returnType(): string
-    {
-        return 'arrayKeysCaseFormat';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

@@ -9,16 +9,19 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Callable;
-
+namespace JakubLech\Transformer\Transformers\Callable;
+use Closure;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
-use Closure;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ClosureToArrayTypesTransformer implements TypesTransformerInterface
+final class ClosureToArrayTransformer implements TransformerInterface
 {
+    public static function inputType(): string { return 'Closure';}
+
+    public static function returnType(): string { return 'array';}
+
     /**
      * @param Closure $input
      *
@@ -29,20 +32,5 @@ final class ClosureToArrayTypesTransformer implements TypesTransformerInterface
         AssertInputType::strict($input, $this);
 
         return ['Closure'];
-    }
-
-    public static function inputType(): string
-    {
-        return 'Closure';
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

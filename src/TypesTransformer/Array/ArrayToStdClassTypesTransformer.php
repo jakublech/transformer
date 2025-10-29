@@ -9,16 +9,19 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Array;
-
+namespace JakubLech\Transformer\Transformers\Array;
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 use stdClass;
 
-final class ArrayToStdClassTypesTransformer implements TypesTransformerInterface
+final class ArrayToStdClassTransformer implements TransformerInterface
 {
+    public static function inputType(): string { return 'array';}
+
+    public static function returnType(): string { return stdClass::class;}
+
     /**
      * @param array $input
      *
@@ -36,20 +39,5 @@ final class ArrayToStdClassTypesTransformer implements TypesTransformerInterface
         }
 
         return $stdClass;
-    }
-
-    public static function inputType(): string
-    {
-        return 'array';
-    }
-
-    public static function returnType(): string
-    {
-        return stdClass::class;
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

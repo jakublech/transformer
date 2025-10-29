@@ -9,24 +9,26 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Json;
+namespace JakubLech\Transformer\Transformers\Json;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class JsonToArray implements TypesTransformerInterface
+final class JsonToArray implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return 'string';}
+
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param string $input
      *
-     * @throws UnsupportedInputTypeException
+     * @throws UnsupportedInputTypeException|TransformException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -41,21 +43,6 @@ final class JsonToArray implements TypesTransformerInterface
             throw new TransformException('Can not transform json string to array. ' . json_last_error_msg());
         }
 
-        return ($this->transform)($result, 'array', $context);
-    }
-
-    public static function inputType(): string
-    {
-        return 'string';
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
+        return $this->transform->transform($result, 'array', $context);
     }
 }

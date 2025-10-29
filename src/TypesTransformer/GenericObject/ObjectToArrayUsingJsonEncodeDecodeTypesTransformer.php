@@ -18,20 +18,9 @@ use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
 
 final class ObjectToArrayUsingJsonEncodeDecodeTypesTransformer implements TypesTransformerInterface
 {
-    public static function inputType(): string
-    {
-        return 'object';
-    }
+    public static function inputType(): string { return 'object';}
 
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
-    }
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param object $input

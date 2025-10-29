@@ -11,8 +11,24 @@ declare(strict_types=1);
 
 namespace JakubLech\Transformer\Tests\Unit;
 
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TransformerFactory;
+use JakubLech\Transformer\TransformHandler as Transform;
+use JakubLech\Transformer\Transformers\Array\ArrayIteratorToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformers\Array\ArrayToStdClassTransformer;
+use JakubLech\Transformer\Transformers\Array\IterableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Array\IteratorAggregateToArrayTransformer;
+use JakubLech\Transformer\Transformers\Callable\CallableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Callable\ClosureToArrayTransformer;
+use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\ObjectToArrayCompositeTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
+use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
+use JakubLech\Transformer\Transformers\Json\JsonSerializableToArray;
+use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Throwable\ThrowableToJsonTransformer;
+use JakubLech\Transformer\TransformHandlerFactory;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,21 +36,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class ComplexDtoTransformTest extends TestCase
 {
-    private Transformer $sut;
+    private Transform $sut;
+    private ArrayToJsonTransformer $transformer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->sut = TransformerFactory::defaultPhpNativeTypesTransformer();
+        $this->sut = TransformHandlerFactory::defaultPhpNativeTypesTransformHandler();
     }
 
     public function testComplexDtoExampleToArrayUsingReflection(): void
     {
         $testDto = ComplexDtoExample::createFullyPopulated();
         $context = ['_strategyObjectToArray' => 'useReflection'];
-        $resultReflection = $this->sut->__invoke($testDto, 'array', $context);
-        $resultDefault = $this->sut->__invoke($testDto, 'array');
+        $resultReflection = $this->sut->transform($testDto, 'array', $context);
+        $resultDefault = $this->sut->transform($testDto, 'array');
 
         $expected = [
             'id' => 123,
@@ -104,7 +121,7 @@ final class ComplexDtoTransformTest extends TestCase
     {
         $testDto = ComplexDtoExample::createFullyPopulated();
         $context = ['_strategyObjectToArray' => 'usePublicProperties'];
-        $result = $this->sut->__invoke($testDto, 'array', $context);
+        $result = $this->sut->transform($testDto, 'array', $context);
 
         $expected = [
             'id' => 123,
@@ -173,7 +190,7 @@ final class ComplexDtoTransformTest extends TestCase
     {
         $testDto = ComplexDtoExample::createFullyPopulated();
         $context = ['_strategyObjectToArray' => 'useGetterBased'];
-        $result = $this->sut->__invoke($testDto, 'array', $context);
+        $result = $this->sut->transform($testDto, 'array', $context);
 
         $expected = [
             'privateProperty' => 'private value',
@@ -186,7 +203,7 @@ final class ComplexDtoTransformTest extends TestCase
     {
         $testDto = ComplexDtoExample::createFullyPopulated();
         $context = ['_strategyObjectToArray' => 'useJsonEncodeDecode'];
-        $result = $this->sut->__invoke($testDto, 'array', $context);
+        $result = $this->sut->transform($testDto, 'array', $context);
 
         $expected = [
             'id' => 123,

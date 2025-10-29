@@ -9,20 +9,22 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Throwable;
+namespace JakubLech\Transformer\Transformers\Throwable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 use Throwable;
 use DateTimeImmutable;
 
-final readonly class ThrowableToArrayTypesTransformer implements TypesTransformerInterface
+final readonly class ThrowableToArrayTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transform, private bool $debug = false)
-    {
-    }
+    public function __construct(private TransformHandler $transform, private bool $debug = false){}
+
+    public static function inputType(): string { return Throwable::class;}
+
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param Throwable $input
@@ -42,28 +44,13 @@ final readonly class ThrowableToArrayTypesTransformer implements TypesTransforme
 
         return [
             'message' => $input->getMessage(),
-            'timestamp' => ($this->transform)(new DateTimeImmutable(), 'array', $context),
+            'timestamp' => $this->transform->transform(new DateTimeImmutable(), 'array', $context),
             'class' => $input::class,
             'status' => $input->getCode(),
             'file' => $input->getFile(),
             'line' => $input->getLine(),
             'trace' => $input->getTrace(),
-            'previous' => $input->getPrevious() ? ($this->transform)($input->getPrevious(), 'array', $context) : null,
+            'previous' => $input->getPrevious() ? $this->transform->transform($input->getPrevious(), 'array', $context) : null,
         ];
-    }
-
-    public static function inputType(): string
-    {
-        return Throwable::class;
-    }
-
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

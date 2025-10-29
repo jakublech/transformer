@@ -9,34 +9,21 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\GenericObject;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ObjectToArrayUsingGettersTypesTransformer implements TypesTransformerInterface
+final class ObjectToArrayUsingGettersTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
 
-    public static function inputType(): string
-    {
-        return 'object';
-    }
+    public static function inputType(): string { return 'object';}
 
-    public static function returnType(): string
-    {
-        return 'array';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
-    }
+    public static function returnType(): string { return 'array';}
 
     /**
      * @param object $input
@@ -52,7 +39,7 @@ final class ObjectToArrayUsingGettersTypesTransformer implements TypesTransforme
             if (str_starts_with($method, 'get')) {
                 $key = lcfirst(substr($method, 3));
                 $array[$key] = is_object($input->{$method}()) || is_array($input->{$method}())
-                    ? ($this->transform)($input, 'array', $context)
+                    ? $this->transform->transform($input, 'array', $context)
                     : $input->{$method}();
             }
         }

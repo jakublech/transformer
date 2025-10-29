@@ -9,20 +9,18 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Throwable;
+namespace JakubLech\Transformer\Transformers\Throwable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\Array\ArrayToJsonTypesTransformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\Array\ArrayToJsonTransformer;
+use JakubLech\Transformer\Transformers\TransformerInterface;
+use JakubLech\Transformer\TransformHandler;
 use Throwable;
 
-final readonly class ThrowableToJsonTypesTransformer implements TypesTransformerInterface
+final class ThrowableToJsonTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transformer)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
 
     /**
      * @param Throwable $input
@@ -33,10 +31,9 @@ final readonly class ThrowableToJsonTypesTransformer implements TypesTransformer
     {
         AssertInputType::strict($input, $this);
 
-        return (new ArrayToJsonTypesTransformer())(
-            ($this->transformer)(
+        return (new ArrayToJsonTransformer())(
+            (new ThrowableToArrayTransformer($this->transform))(
                 $input,
-                'array',
                 $context
             ),
             $context

@@ -9,28 +9,30 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Json;
+namespace JakubLech\Transformer\Transformers\Json;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class JsonToObject implements TypesTransformerInterface
+final class JsonToObject implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return 'string';}
+
+    public static function returnType(): string { return 'object';}
 
     /**
      * @param string $input
      *
-     * @throws UnsupportedInputTypeException
+     * @throws UnsupportedInputTypeException|TransformException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
-        AssertInputType::strict($this->transform, $input);
+        AssertInputType::strict($input, $this);
 
         $flags = $context['_flags'] ?? 0;
         $depth = $context['_depth'] ?? 512;
@@ -41,21 +43,6 @@ final class JsonToObject implements TypesTransformerInterface
             throw new TransformException('Can not transform json string to object. ' . json_last_error_msg());
         }
 
-        return ($this->transform)($result, 'object', $context);
-    }
-
-    public static function inputType(): string
-    {
-        return 'string';
-    }
-
-    public static function returnType(): string
-    {
-        return 'object';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
+        return $this->transform->transform($result, 'object', $context);
     }
 }

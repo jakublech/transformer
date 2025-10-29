@@ -9,18 +9,20 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\GenericObject;
+namespace JakubLech\Transformer\Transformers\GenericObject;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\Transformer;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ObjectToJsonTypesTransformer implements TypesTransformerInterface
+final class ObjectToJsonTransformer implements TransformerInterface
 {
-    public function __construct(private Transformer $transform)
-    {
-    }
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return 'object';}
+
+    public static function returnType(): string { return 'json';}
 
     /**
      * @param object $input
@@ -31,25 +33,10 @@ final class ObjectToJsonTypesTransformer implements TypesTransformerInterface
     {
         AssertInputType::strict($input, $this);
 
-        return ($this->transform)(
-            ($this->transform)($input, 'array', $context),
+        return $this->transform->transform(
+            $this->transform->transform($input, 'array', $context),
             'json',
             $context
         );
-    }
-
-    public static function inputType(): string
-    {
-        return 'object';
-    }
-
-    public static function returnType(): string
-    {
-        return 'json';
-    }
-
-    public static function priority(): int
-    {
-        return -1000;
     }
 }

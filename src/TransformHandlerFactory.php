@@ -22,10 +22,10 @@ use JakubLech\Transformer\Transformers\Callable\ClosureToArrayTransformer;
 use JakubLech\Transformer\Transformers\DateTime\DateTimeInterfaceToArrayTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\ObjectToArrayCompositeTransformer;
 use JakubLech\Transformer\Transformers\GenericObject\ObjectToJsonTransformer;
-use JakubLech\Transformer\Transformers\GenericObject\StdClassToArray;
-use JakubLech\Transformer\Transformers\Json\JsonSerializableToArray;
-use JakubLech\Transformer\Transformers\Json\JsonToArray;
-use JakubLech\Transformer\Transformers\Json\JsonToObject;
+use JakubLech\Transformer\Transformers\GenericObject\StdClassToArrayTransformer;
+use JakubLech\Transformer\Transformers\Json\JsonSerializableToArrayTransformer;
+use JakubLech\Transformer\Transformers\Json\JsonToArrayTransformer;
+use JakubLech\Transformer\Transformers\Json\JsonToObjectTransformer;
 use JakubLech\Transformer\Transformers\Stringable\StringableToArrayTransformer;
 use JakubLech\Transformer\Transformers\Stringable\StringableToStringTransformer;
 use JakubLech\Transformer\Transformers\Throwable\ThrowableToArrayTransformer;
@@ -53,11 +53,11 @@ final readonly class TransformHandlerFactory
 
         $collection->add(new ObjectToArrayCompositeTransformer($handler));
         $collection->add(new ObjectToJsonTransformer($handler));
-        $collection->add(new StdClassToArray($handler));
+        $collection->add(new StdClassToArrayTransformer($handler));
 
-        $collection->add(new JsonSerializableToArray($handler));
-        $collection->add(new JsonToArray($handler));
-        $collection->add(new JsonToObject($handler));
+        $collection->add(new JsonSerializableToArrayTransformer($handler));
+        $collection->add(new JsonToArrayTransformer($handler));
+        $collection->add(new JsonToObjectTransformer($handler));
 
         $collection->add(new StringableToArrayTransformer());
         $collection->add(new StringableToStringTransformer());

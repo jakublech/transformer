@@ -12,12 +12,12 @@ declare(strict_types=1);
 namespace JakubLech\Transformer\Assert;
 
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
 final class AssertInputType
 {
     /** @throws UnsupportedInputTypeException */
-    public static function strict(mixed $input, TypesTransformerInterface $transformer): void
+    public static function strict(mixed $input, TransformerInterface $transformer): void
     {
         $expectedType = $transformer::inputType();
 

@@ -9,16 +9,16 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Array;
+namespace JakubLech\Transformer\Transformers\Array;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\CaseConverter\ArrayKeysCaseConvert;
 use JakubLech\Transformer\CaseConverter\CaseFormat;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ArrayKeysCaseTypesTransformer implements TypesTransformerInterface
+final class ArrayKeysCaseTransformer implements TransformerInterface
 {
     public static function inputType(): string { return 'array';}
 

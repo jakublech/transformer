@@ -9,24 +9,20 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\Transformers\GenericObject;
+namespace JakubLech\Transformer\Transformers\Callable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TransformHandler;
 use JakubLech\Transformer\Transformers\TransformerInterface;
-use stdClass;
 
-final class StdClassToArray implements TransformerInterface
+final class CallableToArrayTransformer implements TransformerInterface
 {
-    public function __construct(private TransformHandler $transform){}
-
-    public static function inputType(): string { return stdClass::class;}
+    public static function inputType(): string { return 'callable';}
 
     public static function returnType(): string { return 'array';}
 
     /**
-     * @param stdClass $input
+     * @param callable $input
      *
      * @throws UnsupportedInputTypeException
      */
@@ -34,6 +30,6 @@ final class StdClassToArray implements TransformerInterface
     {
         AssertInputType::strict($input, $this);
 
-        return $this->transform->transform((array) $input, 'array', $context);
+        return ['callable'];
     }
 }

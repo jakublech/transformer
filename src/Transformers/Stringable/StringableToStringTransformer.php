@@ -9,18 +9,18 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\Stringable;
+namespace JakubLech\Transformer\Transformers\Stringable;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 use Stringable;
 
-final class StringableToArrayTypesTransformer implements TypesTransformerInterface
+final class StringableToStringTransformer implements TransformerInterface
 {
     public static function inputType(): string { return Stringable::class;}
 
-    public static function returnType(): string { return 'array';}
+    public static function returnType(): string { return 'string';}
 
     /**
      * @param Stringable $input

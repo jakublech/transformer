@@ -17,7 +17,7 @@ use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
 use JakubLech\Transformer\TransformHandler;
 use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class JsonToObject implements TransformerInterface
+final class JsonToObjectTransformer implements TransformerInterface
 {
     public function __construct(private TransformHandler $transform){}
 

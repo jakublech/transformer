@@ -9,27 +9,19 @@
 
 declare(strict_types=1);
 
-<<<<<<<< HEAD:src/TypesTransformer/TypesTransformersCollection.php
-namespace JakubLech\Transformer\TypesTransformer;
-
-use JakubLech\Transformer\Exception\UnsupportedTransformationException;
-
-final class TypesTransformersCollection implements TypesTransformersCollectionInterface
-========
 namespace JakubLech\Transformer\Transformers;
 
 use JakubLech\Transformer\Exception\UnsupportedTransformationException;
 
 final class TransformersCollection implements TransformersCollectionInterface
->>>>>>>> 2241c56 (refactor):src/TypesTransformer/TransformersCollection.php
 {
-    /** @var array<string, TypesTransformerInterface>|TypesTransformerInterface[] */
+    /** @var array<string, TransformerInterface>|TransformerInterface[] */
     private array $transformers = [];
 
     /** @var array<string, array<int, string>> */
     private array $classInheritanceCache = [];
 
-    /** @param iterable|TypesTransformerInterface[] $transformers */
+    /** @param iterable|TransformerInterface[] $transformers */
     public function __construct(iterable $transformers = [])
     {
         foreach ($transformers as $transformer) {
@@ -37,11 +29,7 @@ final class TransformersCollection implements TransformersCollectionInterface
         }
     }
 
-<<<<<<<< HEAD:src/TypesTransformer/TypesTransformersCollection.php
-    public function add(TypesTransformerInterface $transformer): void
-========
     public function add(TransformerInterface $transformer, bool $overwrite = false): void
->>>>>>>> 2241c56 (refactor):src/TypesTransformer/TransformersCollection.php
     {
         $key = $this->getTransformerKeyPair($transformer->inputType(), $transformer->returnType());
         if (isset($this->transformers[$key]) && false === $overwrite) {
@@ -57,7 +45,7 @@ final class TransformersCollection implements TransformersCollectionInterface
     /**
      * @throws UnsupportedTransformationException
      */
-    public function get(mixed $input, string $outputType): TypesTransformerInterface
+    public function get(mixed $input, string $outputType): TransformerInterface
     {
         foreach ($this->getInheritedTypes($input) as $inputType) {
             if ($transformer = $this->transformers[$this->getTransformerKeyPair($inputType, $outputType)] ?? false) {
@@ -73,7 +61,7 @@ final class TransformersCollection implements TransformersCollectionInterface
         ));
     }
 
-    public function find(mixed $input, string $outputType): ?TypesTransformerInterface
+    public function find(mixed $input, string $outputType): ?TransformerInterface
     {
         try {
             return $this->get($input, $outputType);

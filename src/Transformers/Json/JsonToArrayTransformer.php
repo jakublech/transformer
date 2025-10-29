@@ -9,23 +9,26 @@
 
 declare(strict_types=1);
 
-namespace JakubLech\Transformer\TypesTransformer\GenericObject;
+namespace JakubLech\Transformer\Transformers\Json;
 
 use JakubLech\Transformer\Assert\AssertInputType;
 use JakubLech\Transformer\Exception\TransformException;
 use JakubLech\Transformer\Exception\UnsupportedInputTypeException;
-use JakubLech\Transformer\TypesTransformer\TypesTransformerInterface;
+use JakubLech\Transformer\TransformHandler;
+use JakubLech\Transformer\Transformers\TransformerInterface;
 
-final class ObjectToArrayUsingJsonEncodeDecodeTypesTransformer implements TypesTransformerInterface
+final class JsonToArrayTransformer implements TransformerInterface
 {
-    public static function inputType(): string { return 'object';}
+    public function __construct(private TransformHandler $transform){}
+
+    public static function inputType(): string { return 'string';}
 
     public static function returnType(): string { return 'array';}
 
     /**
-     * @param object $input
+     * @param string $input
      *
-     * @throws TransformException|UnsupportedInputTypeException
+     * @throws UnsupportedInputTypeException|TransformException
      */
     public function __invoke(mixed $input, array $context = []): array
     {
@@ -34,11 +37,12 @@ final class ObjectToArrayUsingJsonEncodeDecodeTypesTransformer implements TypesT
         $flags = $context['_flags'] ?? 0;
         $depth = $context['_depth'] ?? 512;
 
-        $result = json_encode($input, $flags, $depth);
+        $result = json_decode($input, true, $depth, $flags);
+
         if (JSON_ERROR_NONE !== json_last_error() || false === $result) {
-            throw new TransformException('Can not transform array to json. ' . json_last_error_msg());
+            throw new TransformException('Can not transform json string to array. ' . json_last_error_msg());
         }
 
-        return (array) json_decode($result, true, $depth, $flags);
+        return $this->transform->transform($result, 'array', $context);
     }
 }
